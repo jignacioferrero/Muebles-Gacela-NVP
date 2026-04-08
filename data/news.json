@@ -1,0 +1,52 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "slug": "muebles-gacela-presenta-nueva-linea-kyoto",
+      "title": "Muebles Gacela presenta su nueva línea Kyoto",
+      "coverImage": "/images/hero-home.png",
+      "content": "<h2>Minimalismo y Funcionalidad</h2>\n<p>La nueva línea Kyoto de Muebles Gacela nace bajo los preceptos del diseño minimalista japonés, incorporando la máxima eficiencia en espacios reducidos con acabados que resaltan la pureza de la madera y líneas limpias.</p>\n<p>Pensada para departamentos urbanos, esta colección destaca por su <strong>modularidad</strong>. Cada mueble puede reubicarse y transformar la función de la habitación completa en minutos.</p>\n<h3>Ideal para espacios colaborativos</h3>\n<p>Gracias a sus superficies texturizadas y su robustez oculta bajo una fachada elegante, Kyoto es perfecta para comedores modernos.</p>",
+      "date": "2026-03-15",
+      "author": "Equipo de Diseño",
+      "category": "Lanzamientos",
+      "tags": ["Kyoto", "Comedor", "Minimalismo"],
+      "isFeatured": true
+    },
+    {
+      "id": "2",
+      "slug": "tendencias-living-2026-espacios-fluidos",
+      "title": "Tendencias 2026: Espacios fluidos en el Living",
+      "coverImage": "/images/Cocina.png",
+      "content": "<h2>El fin de los límites arquitectónicos</h2>\n<p>Este 2026 marca el regreso definitivo de los espacios fluidos. La cocina ya no es un ente separado del living, sino su extensión.</p>\n<p>Al emplear amoblamiento que dialoga estéticamente en ambos sectores, como islas que se convierten en barras y centros de entretenimiento, logramos una amplitud visual sin precedentes. A la hora de elegir tu mobiliario de living, priorizá <strong>mesas de centro orgánicas</strong> y respaldos bajos.</p>",
+      "date": "2026-04-01",
+      "author": "María Gacela",
+      "category": "Tendencias",
+      "tags": ["Living", "Cocina", "Clásica"],
+      "isFeatured": true
+    },
+    {
+      "id": "3",
+      "slug": "proyectos-corporativos-lumo",
+      "title": "Proyectos Corporativos: La eficiencia de Lumo",
+      "coverImage": "/images/hero.webp",
+      "content": "<h2>De la casa a la oficina</h2>\n<p>La línea Lumo ha sido implementada exitosamente en más de 50 oficinas corporativas este año. Su propuesta de valor reside en la durabilidad del melamínico de alto espesor y los cantos en PVC 2mm.</p>\n<p>Sabemos que un <strong>workspace</strong> necesita resistir el uso constante. Lumo ofrece escritorios gerenciales y puestos operativos con pasacables invisibles y estructuras en caño pintado a horno.</p>",
+      "date": "2026-04-05",
+      "author": "Ventas Corporativas",
+      "category": "Proyectos",
+      "tags": ["Lumo", "Oficina"],
+      "isFeatured": true
+    },
+    {
+      "id": "4",
+      "slug": "la-importancia-de-los-herrajes-nordik",
+      "title": "El secreto de la Serie Nordik: Sus herrajes",
+      "coverImage": "/images/Fábrica.jpg",
+      "content": "<h2>Detalles que marcan la diferencia</h2>\n<p>A simple vista, un mueble puede parecer idéntico a otro. Sin embargo, en Muebles Gacela sabemos que la vida útil se esconde en los herrajes.</p>\n<p>Nuestra línea Nordik incorpora guías telescópicas de extracción total y bisagras con sistema <em>soft-close</em> de serie, garantizando un cierre silencioso y suave durante miles de ciclos.</p>",
+      "date": "2026-03-20",
+      "author": "Taller",
+      "category": "Institucional",
+      "tags": ["Nordik", "Dormitorio"],
+      "isFeatured": false
+    }
+  ]
+}

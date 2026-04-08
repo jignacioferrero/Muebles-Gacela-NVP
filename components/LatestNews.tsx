@@ -45,7 +45,7 @@ const LatestNews: React.FC = () => {
   return (
     <section className="py-24 bg-brand-bg">
       <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-serif text-center mb-12 text-brand-text">Latest News</h2>
+        <h2 className="text-4xl font-serif text-center mb-12 text-brand-primary font-serif">Latest News</h2>
         <div className="relative max-w-6xl mx-auto">
           <div className="overflow-hidden rounded-lg shadow-xl bg-white">
             <div className="flex transition-transform ease-in-out duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
@@ -56,9 +56,9 @@ const LatestNews: React.FC = () => {
                   </div>
                   <div className="p-8 md:p-12 flex flex-col justify-center">
                     <p className="text-sm text-gray-500 mb-2">{item.category}</p>
-                    <h3 className="text-2xl lg:text-3xl font-serif font-bold mb-4 text-brand-text">{item.title}</h3>
+                    <h3 className="text-2xl lg:text-3xl font-serif font-bold mb-4 text-brand-primary font-serif">{item.title}</h3>
                     <p className="text-gray-600 mb-6 leading-relaxed">{item.description}</p>
-                    <button className="bg-white text-brand-text font-semibold py-2 px-6 rounded-full border border-gray-300 self-start hover:bg-gray-100 transition-colors">
+                    <button className="bg-white text-brand-primary font-semibold py-2 px-6 rounded-md border border-gray-300 self-start hover:bg-gray-100 transition-colors">
                       Descubra now
                     </button>
                   </div>
@@ -67,10 +67,10 @@ const LatestNews: React.FC = () => {
             </div>
           </div>
 
-          <button onClick={prevSlide} className="absolute top-1/2 left-0 md:-left-6 transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white transition-colors">
+          <button onClick={prevSlide} className="absolute top-1/2 left-0 md:-left-6 transform -translate-y-1/2 bg-white/80 rounded-md p-2 shadow-md hover:bg-white transition-colors">
             <ChevronLeftIcon className="h-6 w-6 text-gray-700" />
           </button>
-          <button onClick={nextSlide} className="absolute top-1/2 right-0 md:-right-6 transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white transition-colors">
+          <button onClick={nextSlide} className="absolute top-1/2 right-0 md:-right-6 transform -translate-y-1/2 bg-white/80 rounded-md p-2 shadow-md hover:bg-white transition-colors">
             <ChevronRightIcon className="h-6 w-6 text-gray-700" />
           </button>
           
@@ -79,7 +79,7 @@ const LatestNews: React.FC = () => {
               <button 
                 key={slideIndex} 
                 onClick={() => goToSlide(slideIndex)}
-                className={`w-2 h-2 rounded-full transition-colors ${currentIndex === slideIndex ? 'bg-brand-text' : 'bg-gray-300'}`}
+                className={`w-2 h-2 rounded-md transition-colors ${currentIndex === slideIndex ? 'bg-brand-support' : 'bg-gray-300'}`}
               ></button>
             ))}
           </div>

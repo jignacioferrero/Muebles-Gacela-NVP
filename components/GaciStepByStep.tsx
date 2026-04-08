@@ -33,8 +33,8 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
   const [currentView, setCurrentView] = useState<GaciView>('welcome');
   const [userName, setUserName] = useState<string>(''); // Nuevo estado para el nombre del usuario
   const [checklistItems, setChecklistItems] = useState([
-    { id: 'A', label: 'Tapa', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5' },
-    { id: 'B', label: 'Piso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5' },
+    { id: 'A', label: 'Tapa', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', modelUrl: '/Modelos 3d/Prueba.glb' },
+    { id: 'B', label: 'Piso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', finishes: ['roble', 'roble', 'blanco', 'roble', 'roble', 'roble'] },
     { id: 'C/D', label: 'Costados (Izquierdo y Derecho)', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '80x60x1.5' },
     { id: 'F', label: 'Entrepiso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '117x58x1.5' },
     { id: 'E', label: 'Separador abajo', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '30x58x1.5' },
@@ -74,7 +74,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
 
   // Estado para el visor 3D
   const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
-  const [selectedPiece3D, setSelectedPiece3D] = useState<{ name: string, dimensions: string } | null>(null);
+  const [selectedPiece3D, setSelectedPiece3D] = useState<{ name: string, dimensions: string, modelUrl?: string, finishes?: string[] } | null>(null);
   const [showMusicOption, setShowMusicOption] = useState(false);
 
 
@@ -175,8 +175,8 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
     setViewerVideoUrl(null);
   };
 
-  const openPieceViewer3D = (name: string, dims: string) => {
-    setSelectedPiece3D({ name, dimensions: dims });
+  const openPieceViewer3D = (name: string, dims: string, modelUrl?: string, finishes?: string[]) => {
+    setSelectedPiece3D({ name, dimensions: dims, modelUrl, finishes });
     setIs3DViewerOpen(true);
   };
 
@@ -274,7 +274,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
       {/* Botón de Volver */}
       <motion.button
         onClick={handleGlobalBackClick}
-        className="absolute top-8 left-8 flex items-center text-brand-dark-green hover:text-brand-text transition-colors text-sm font-semibold group z-30"
+        className="absolute top-8 left-8 flex items-center text-brand-primary hover:text-brand-primary transition-colors text-sm font-semibold group z-30"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
@@ -294,9 +294,9 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
             className="max-w-3xl text-center z-10 flex flex-col justify-center min-h-[calc(100vh-8rem)]" // Centra verticalmente el contenido
           >
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-extralight leading-tight text-brand-text mb-8"
+              className="text-4xl md:text-5xl lg:text-6xl font-extralight leading-tight text-brand-primary mb-8"
             >
-              Hola, vamos a armar tu <span className="font-medium text-brand-dark-green">{product.title}</span> juntos. ¿Me puedes decir tu nombre?
+              Hola, vamos a armar tu <span className="font-medium text-brand-primary">{product.title}</span> juntos. ¿Me puedes decir tu nombre?
             </h1>
 
             <div className="relative w-full">
@@ -323,11 +323,11 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
 
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-12">
                       <div className="flex items-center text-lg text-gray-700 font-light">
-                        <Timer size={20} className="mr-2 text-brand-dark-green opacity-70" />
+                        <Timer size={20} className="mr-2 text-brand-primary opacity-70" />
                         Tiempo estimado: <span className="font-semibold ml-1">{product.assemblyTime}</span>
                       </div>
                       <div className="flex items-center text-lg text-gray-700 font-light">
-                        <HardHat size={20} className="mr-2 text-brand-dark-green opacity-70" />
+                        <HardHat size={20} className="mr-2 text-brand-primary opacity-70" />
                         Nivel: <span className="font-semibold ml-1">{product.difficulty}</span>
                       </div>
                     </div>
@@ -335,9 +335,9 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                     <motion.button
                       onClick={handleStartAssemblyClick}
                       disabled={userName.trim() === ''}
-                      className={`inline-flex items-center justify-center px-10 py-4 rounded-full text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 ${userName.trim() === ''
+                      className={`inline-flex items-center justify-center px-10 py-4 rounded-md text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 ${userName.trim() === ''
                         ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                        : 'bg-brand-dark-green text-white hover:bg-brand-text'
+                        : 'bg-brand-support text-brand-bg hover:bg-brand-support-hover'
                         }`}
                     >
                       <Play size={24} className="mr-3 group-hover:scale-110 transition-transform" />
@@ -354,17 +354,17 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                   >
                     <div className="flex flex-col items-center space-y-4">
                       <div className="p-3 bg-brand-bg rounded-2xl">
-                        <Music className="text-brand-dark-green" size={32} />
+                        <Music className="text-brand-primary" size={32} />
                       </div>
-                      <p className="text-2xl md:text-3xl font-light text-brand-text max-w-lg">
-                        ¡Hola <span className="font-bold text-brand-dark-green">{userName}</span>! ¿te gustaría poner algo de música para armar con onda?
+                      <p className="text-2xl md:text-3xl font-light text-brand-primary max-w-lg">
+                        ¡Hola <span className="font-bold text-brand-primary">{userName}</span>! ¿te gustaría poner algo de música para armar con onda?
                       </p>
                     </div>
 
                     <div className="flex flex-col items-center space-y-6">
                       <button
                         onClick={handleOpenPlaylist}
-                        className="flex items-center space-x-3 px-8 py-4 bg-[#1DB954] text-white rounded-full font-bold text-base hover:bg-[#1ed760] transition-all shadow-lg transform hover:scale-105 active:scale-95 group"
+                        className="flex items-center space-x-3 px-8 py-4 bg-[#1DB954] text-white rounded-md font-bold text-base hover:bg-[#1ed760] transition-all shadow-lg transform hover:scale-105 active:scale-95 group"
                       >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.498 17.305c-.215.353-.675.465-1.028.249-2.835-1.734-6.405-2.126-10.609-1.168-.403.093-.81-.157-.902-.56-.093-.404.157-.811.56-.902 4.607-1.054 8.549-.607 11.731 1.34.352.216.464.675.248 1.029zm1.467-3.262c-.27.439-.846.58-1.285.31-3.246-1.996-8.194-2.574-12.031-1.408-.493.15-1.021-.129-1.171-.622-.15-.494.13-.1021.623-1.171 4.385-1.33 9.845-.689 13.554 1.59.439.27.58.846.31 1.285zm.126-3.411C15.485 8.291 9.53 8.094 6.082 9.14c-.542.164-1.11-.144-1.275-.686-.164-.543.144-1.11.686-1.275 4 1.213 10.589 1.442 14.789-1.053.488-.29 1.125-.132 1.415.355.29.488.132 1.125-.355 1.415z" />
@@ -375,7 +375,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
 
                       <button
                         onClick={handleSkipMusic}
-                        className="text-gray-400 hover:text-brand-text text-sm font-semibold tracking-widest uppercase hover:underline transition-all underline-offset-8 decoration-brand-dark-green/30"
+                        className="text-gray-400 hover:text-brand-primary text-sm font-semibold tracking-widest uppercase hover:underline transition-all underline-offset-8 decoration-brand-dark-green/30"
                       >
                         Saltear y empezar manual
                       </button>
@@ -396,8 +396,8 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-4xl w-full text-center z-10 flex flex-col justify-center items-center min-h-[calc(100vh-8rem)]"
           >
-            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-10">
-              ¡Hola <span className="font-medium text-brand-dark-green">{userName}!</span> Soy Gaci. Vamos a armar tu <span className="font-medium text-brand-dark-green">{product.title}</span> juntos!
+            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-10 font-serif">
+              ¡Hola <span className="font-medium text-brand-primary">{userName}!</span> Soy Gaci. Vamos a armar tu <span className="font-medium text-brand-primary">{product.title}</span> juntos!
               Antes de empezar, asegúrate de tener estas herramientas a mano.
             </h1>
 
@@ -412,8 +412,8 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-lg border border-gray-100"
                   >
-                    {IconComponent && <IconComponent size={48} className="text-brand-dark-green mb-4 opacity-80" />}
-                    <h3 className="text-lg font-semibold text-brand-text mb-2">{tool.name}</h3>
+                    {IconComponent && <IconComponent size={48} className="text-brand-primary mb-4 opacity-80" />}
+                    <h3 className="text-lg font-semibold text-brand-primary mb-2 font-serif">{tool.name}</h3>
                     <p className={`text-sm ${tool.included ? 'text-green-600' : 'text-orange-600'} font-medium`}>
                       {tool.included ? '¡Tranquilo! Esta viene dentro de la caja.' : 'Herramienta adicional necesaria.'}
                     </p>
@@ -427,7 +427,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="inline-flex items-center justify-center px-12 py-5 bg-brand-text text-white rounded-full text-xl font-bold uppercase tracking-widest hover:bg-brand-dark-green transition-colors shadow-2xl mb-12"
+              className="inline-flex items-center justify-center px-12 py-5 bg-brand-support text-white rounded-md text-xl font-bold uppercase tracking-widest hover:bg-brand-support transition-colors shadow-2xl mb-12"
               style={{ minWidth: '300px' }} // Asegura que el botón sea grande
             >
               Tengo las herramientas, ¡vamos!
@@ -439,7 +439,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               transition={{ duration: 0.6, delay: 1 }}
               className="text-gray-500 italic text-md md:text-lg max-w-2xl"
             >
-              <span className="font-bold text-brand-dark-green">Consejo de Gaci:</span> Busca un lugar amplio y usa el mismo cartón de la caja para no rayar el piso ni el mueble.
+              <span className="font-bold text-brand-primary">Consejo de Gaci:</span> Busca un lugar amplio y usa el mismo cartón de la caja para no rayar el piso ni el mueble.
             </motion.p>
           </motion.div>
         )}
@@ -463,7 +463,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               className="w-full max-w-xl h-auto object-cover rounded-lg shadow-lg mb-12 border-4 border-white"
             />
 
-            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-8">
+            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
               Paso 1: Unboxing y Reconocimiento
             </h1>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-6 max-w-2xl">
@@ -491,20 +491,20 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                       id={`item-${item.id}`}
                       checked={item.checked}
                       onChange={() => handleCheckboxChange(item.id)}
-                      className="h-6 w-6 text-brand-dark-green rounded focus:ring-brand-dark-green border-gray-300"
+                      className="h-6 w-6 text-brand-primary rounded focus:ring-brand-dark-green border-gray-300"
                       aria-label={item.label}
                     />
                     <div className="flex-1 text-left">
                       <label
                         htmlFor={`item-${item.id}`}
-                        className="text-base font-medium text-brand-text cursor-pointer hover:text-brand-dark-green transition-colors"
+                        className="text-base font-medium text-brand-primary cursor-pointer hover:text-brand-primary transition-colors"
                       >
                         {item.label}
                       </label>
                       {item.dimensions && (
                         <button
-                          onClick={(e) => { e.stopPropagation(); openPieceViewer3D(item.label, item.dimensions!); }}
-                          className="ml-2 px-2 py-0.5 bg-brand-bg text-brand-dark-green text-[10px] font-bold uppercase tracking-wider rounded border border-brand-dark-green/20 hover:bg-brand-dark-green hover:text-white transition-all shadow-sm"
+                          onClick={(e) => { e.stopPropagation(); openPieceViewer3D(item.label, item.dimensions!, (item as any).modelUrl); }}
+                          className="ml-2 px-2 py-0.5 bg-brand-bg text-brand-primary text-[10px] font-bold uppercase tracking-wider rounded border border-brand-support/20 hover:bg-brand-support-hover hover:text-brand-primary transition-all shadow-sm"
                         >
                           Ver 3D
                         </button>
@@ -515,7 +515,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                     {item.imageUrl && (
                       <button
                         onClick={(e) => { e.stopPropagation(); openImageViewer(item.imageUrl!); }}
-                        className="text-brand-dark-green underline text-xs font-medium cursor-pointer hover:text-brand-text transition-colors"
+                        className="text-brand-primary underline text-xs font-medium cursor-pointer hover:text-brand-primary transition-colors"
                         aria-label={`Ver imágen de ${item.label}`}
                         role="button"
                       >
@@ -533,7 +533,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               transition={{ duration: 0.6, delay: 0.8 + (checklistItems.length * 0.05) }}
               className="text-gray-500 italic text-md md:text-lg max-w-2xl mt-4 mb-20 lg:mb-12" // Ajustado mb para desktop
             >
-              <span className="font-bold text-brand-dark-green">Consejo de Gaci:</span> ¡Organizar las piezas ahora te ahorrará tiempo más tarde!
+              <span className="font-bold text-brand-primary">Consejo de Gaci:</span> ¡Organizar las piezas ahora te ahorrará tiempo más tarde!
             </motion.p>
           </motion.div>
         )}
@@ -547,7 +547,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-4xl w-full text-center z-10 flex flex-col justify-center items-center min-h-[calc(100vh-8rem)] pb-32 lg:pb-16"
           >
-            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-8">
+            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
               Paso 2: ¡No perdamos ni un tornillo!
             </h1>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-10 max-w-2xl">
@@ -572,16 +572,16 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                       id={`hardware-item-${item.id}`}
                       checked={item.checked}
                       onChange={() => handleHardwareCheckboxChange(item.id)}
-                      className="h-6 w-6 text-brand-dark-green rounded focus:ring-brand-dark-green border-gray-300"
+                      className="h-6 w-6 text-brand-primary rounded focus:ring-brand-dark-green border-gray-300"
                       aria-label={item.label}
                     />
-                    <label htmlFor={`hardware-item-${item.id}`} className="text-base font-medium text-brand-text flex-1 text-left cursor-pointer">
+                    <label htmlFor={`hardware-item-${item.id}`} className="text-base font-medium text-brand-primary flex-1 text-left cursor-pointer">
                       {item.label}
                     </label>
                     {item.imageUrl && (
                       <span
                         onClick={(e) => { e.stopPropagation(); openImageViewer(item.imageUrl); }}
-                        className="text-brand-dark-green underline text-sm font-medium cursor-pointer ml-auto hover:text-brand-text transition-colors"
+                        className="text-brand-primary underline text-sm font-medium cursor-pointer ml-auto hover:text-brand-primary transition-colors"
                         aria-label={`Ver imagen de ${item.label}`}
                         role="button"
                       >
@@ -605,7 +605,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               transition={{ duration: 0.6, delay: 0.8 + (hardwareChecklistItems.length * 0.05) }}
               className="text-gray-500 italic text-md md:text-lg max-w-2xl mt-4 mb-20 lg:mb-12"
             >
-              <span className="font-bold text-brand-dark-green">Consejo de Gaci:</span> ¡Clasificar los herrajes te evitará dolores de cabeza y búsquedas interminables durante el armado!
+              <span className="font-bold text-brand-primary">Consejo de Gaci:</span> ¡Clasificar los herrajes te evitará dolores de cabeza y búsquedas interminables durante el armado!
             </motion.p>
           </motion.div>
         )}
@@ -619,7 +619,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-4xl w-full text-center z-10 flex flex-col justify-center items-center min-h-[calc(100vh-8rem)] pb-32 lg:pb-16"
           >
-            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-8">
+            <h1 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
               Paso 3: Preparando los laterales
             </h1>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-10 max-w-2xl">
@@ -644,17 +644,17 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                       id={`step3-item-${item.id}`}
                       checked={item.checked}
                       onChange={() => handleStep3CheckboxChange(item.id)}
-                      className="h-6 w-6 text-brand-dark-green rounded focus:ring-brand-dark-green border-gray-300"
+                      className="h-6 w-6 text-brand-primary rounded focus:ring-brand-dark-green border-gray-300"
                       aria-label={item.label}
                     />
-                    <label htmlFor={`step3-item-${item.id}`} className="text-base font-medium text-brand-text flex-1 text-left cursor-pointer">
+                    <label htmlFor={`step3-item-${item.id}`} className="text-base font-medium text-brand-primary flex-1 text-left cursor-pointer">
                       {item.label}
                     </label>
                   </div>
                   {item.videoUrl && (
                     <button
                       onClick={(e) => { e.stopPropagation(); openVideoViewer(item.videoUrl!); }}
-                      className="text-brand-dark-green underline text-sm font-medium cursor-pointer text-left pl-9 pt-1 block hover:text-brand-text transition-colors"
+                      className="text-brand-primary underline text-sm font-medium cursor-pointer text-left pl-9 pt-1 block hover:text-brand-primary transition-colors"
                       aria-label={`Ver video de ${item.label}`}
                       role="button"
                     >
@@ -684,7 +684,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               transition={{ duration: 0.6, delay: 1 + (step3ChecklistItems.length * 0.05) }}
               className="text-gray-500 italic text-md md:text-lg max-w-2xl mt-8 mb-20 lg:mb-12"
             >
-              <span className="font-bold text-brand-dark-green">Consejo de Gaci:</span> La precisión en este paso asegura la estabilidad y alineación perfecta de tu mueble.
+              <span className="font-bold text-brand-primary">Consejo de Gaci:</span> La precisión en este paso asegura la estabilidad y alineación perfecta de tu mueble.
             </motion.p>
           </motion.div>
         )}
@@ -703,10 +703,10 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-4xl md:text-6xl font-extralight leading-tight text-brand-text mb-12 drop-shadow-md"
+              className="text-4xl md:text-6xl font-extralight leading-tight text-brand-primary mb-12 drop-shadow-md"
             >
               <Sparkles size={48} className="inline-block text-yellow-500 mb-4 mr-2" />
-              ¡Misión cumplida{userName ? `, ${userName}` : ''}! Tu <span className="font-medium text-brand-dark-green">{product.title}</span> ya es parte de tu hogar.
+              ¡Misión cumplida{userName ? `, ${userName}` : ''}! Tu <span className="font-medium text-brand-primary">{product.title}</span> ya es parte de tu hogar.
               <Sparkles size={48} className="inline-block text-yellow-500 mb-4 ml-2" />
             </motion.h1>
 
@@ -715,13 +715,13 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               initial={{ opacity: 0, y: 50, rotate: -15 }}
               animate={{ opacity: 1, y: 0, rotate: 0 }}
               transition={{ type: "spring", damping: 10, stiffness: 100, delay: 0.8 }}
-              className="relative bg-white text-brand-text p-6 md:p-8 rounded-xl shadow-2xl mb-20 flex flex-col items-center justify-center w-full max-w-sm border-4 border-yellow-400"
+              className="relative bg-white text-brand-primary p-6 md:p-8 rounded-xl shadow-2xl mb-20 flex flex-col items-center justify-center w-full max-w-sm border-4 border-yellow-400"
             >
               <Crown size={64} className="text-yellow-500 mb-4 drop-shadow-lg" />
-              <p className="text-3xl md:text-4xl font-dancing-script text-brand-text drop-shadow-lg leading-none mb-2">
+              <p className="text-3xl md:text-4xl font-dancing-script text-brand-primary drop-shadow-lg leading-none mb-2">
                 {userName || 'Maestro'}
               </p>
-              <p className="text-2xl font-black uppercase tracking-wider text-brand-text drop-shadow-lg">
+              <p className="text-2xl font-black uppercase tracking-wider text-brand-primary drop-shadow-lg">
                 MAESTRO ARMADOR
               </p>
               <p className="text-lg font-bold uppercase tracking-widest text-gray-700/80 drop-shadow-sm">NIVEL EXPERTO</p>
@@ -735,19 +735,19 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               transition={{ duration: 0.6, delay: 1.2 }}
               className="mb-16 w-full max-w-2xl text-left bg-white p-8 rounded-xl shadow-lg border border-gray-100"
             >
-              <h2 className="text-xl md:text-2xl font-light tracking-[0.2em] uppercase text-brand-text mb-6 flex items-center">
-                <Sparkles size={20} className="text-brand-dark-green mr-3" />
+              <h2 className="text-xl md:text-2xl font-light tracking-[0.2em] uppercase text-brand-primary mb-6 flex items-center font-serif">
+                <Sparkles size={20} className="text-brand-primary mr-3" />
                 Mirá los cuidados y consejos de fábrica
               </h2>
               <ul className="space-y-4 text-gray-700 text-base md:text-lg font-light">
                 <li>
-                  <strong className="font-semibold text-brand-dark-green">Ajuste Pro:</strong> Dentro de 15 días, dale un último apretón a los tornillos Allen. Con el uso, la madera se asienta y esto le dará rigidez eterna.
+                  <strong className="font-semibold text-brand-primary">Ajuste Pro:</strong> Dentro de 15 días, dale un último apretón a los tornillos Allen. Con el uso, la madera se asienta y esto le dará rigidez eterna.
                 </li>
                 <li>
-                  <strong className="font-semibold text-brand-dark-green">Limpieza:</strong> Usá solo un paño apenas humedecido. Evitá productos abrasivos.
+                  <strong className="font-semibold text-brand-primary">Limpieza:</strong> Usá solo un paño apenas humedecido. Evitá productos abrasivos.
                 </li>
                 <li>
-                  <strong className="font-semibold text-brand-dark-green">Borrá los códigos:</strong> Borrá el código impreso en el canto con un poco de algodón y alcohol para un acabado perfecto.
+                  <strong className="font-semibold text-brand-primary">Borrá los códigos:</strong> Borrá el código impreso en el canto con un poco de algodón y alcohol para un acabado perfecto.
                 </li>
               </ul>
             </motion.div>
@@ -759,7 +759,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               transition={{ duration: 0.6, delay: 1.4 }}
               className="w-full max-w-2xl text-left bg-white p-8 rounded-xl shadow-lg border border-gray-100 mb-16"
             >
-              <h2 className="text-xl md:text-2xl font-light tracking-[0.2em] uppercase text-brand-text mb-6">
+              <h2 className="text-xl md:text-2xl font-light tracking-[0.2em] uppercase text-brand-primary mb-6 font-serif">
                 ¿Gaci te ayudó?
               </h2>
               <p className="text-gray-700 text-base md:text-lg font-light mb-6">
@@ -772,7 +772,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                   placeholder="Nombre y Apellido"
                   value={feedbackFormData.name}
                   onChange={handleFeedbackFormChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark-green/50 bg-brand-bg text-brand-text"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark-green/50 bg-brand-bg text-brand-primary"
                   required
                 />
                 <input
@@ -781,7 +781,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                   placeholder="Email"
                   value={feedbackFormData.email}
                   onChange={handleFeedbackFormChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark-green/50 bg-brand-bg text-brand-text"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark-green/50 bg-brand-bg text-brand-primary"
                   required
                 />
                 <textarea
@@ -790,17 +790,17 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                   rows={4}
                   value={feedbackFormData.comments}
                   onChange={handleFeedbackFormChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark-green/50 bg-brand-bg text-brand-text resize-y"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark-green/50 bg-brand-bg text-brand-primary resize-y"
                   required
                 ></textarea>
                 <button
                   type="submit"
                   disabled={feedbackStatus === 'sending'}
-                  className={`w-full px-6 py-3 rounded-full text-white font-bold uppercase tracking-wider transition-all duration-300 ${feedbackStatus === 'sending'
+                  className={`w-full px-6 py-3 rounded-md text-white font-bold uppercase tracking-wider transition-all duration-300 ${feedbackStatus === 'sending'
                     ? 'bg-gray-400 cursor-not-allowed'
                     : feedbackStatus === 'success'
                       ? 'bg-green-600'
-                      : 'bg-brand-dark-green hover:bg-brand-text'
+                      : 'bg-brand-support hover:bg-brand-support-hover'
                     }`}
                 >
                   {feedbackStatus === 'sending' ? 'Enviando...' : feedbackStatus === 'success' ? '¡Gracias por ayudarnos a mejorar!' : 'Enviar mis comentarios'}
@@ -815,12 +815,12 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               transition={{ duration: 0.6, delay: 1.6 }}
               className="flex flex-col gap-6 w-full max-w-sm mt-8"
             >
-              <button className="flex items-center justify-center px-8 py-4 bg-yellow-400 text-brand-text rounded-full text-lg font-bold uppercase tracking-widest hover:bg-yellow-500 transition-colors shadow-lg">
+              <button className="flex items-center justify-center px-8 py-4 bg-yellow-400 text-brand-primary rounded-md text-lg font-bold uppercase tracking-widest hover:bg-yellow-500 transition-colors shadow-lg">
                 Dejanos tu reseña en Google ⭐⭐⭐⭐⭐
               </button>
               <button
                 onClick={onBackToHome} // Navigate to home
-                className="flex items-center justify-center px-8 py-4 border-2 border-brand-dark-green text-brand-dark-green rounded-full text-lg font-bold uppercase tracking-widest hover:bg-brand-dark-green hover:text-white transition-colors shadow-lg"
+                className="flex items-center justify-center px-8 py-4 border-2 border-brand-support text-brand-primary rounded-md text-lg font-bold uppercase tracking-widest hover:bg-brand-support-hover hover:text-brand-primary transition-colors shadow-lg"
               >
                 Mirá todos nuestros productos
               </button>
@@ -840,9 +840,9 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
             transition={{ duration: 0.5, delay: currentView === 'step1' ? (0.5 + (checklistItems.length * 0.05)) : currentView === 'step2' ? (0.5 + (hardwareChecklistItems.length * 0.05)) : (0.5 + (step3ChecklistItems.length * 0.05)) }}
             onClick={handleNextStepClick}
             disabled={isNextButtonDisabled}
-            className={`hidden lg:flex items-center justify-center px-10 py-4 rounded-full shadow-xl text-lg font-bold uppercase tracking-widest transition-all duration-300 max-w-md w-full ${isNextButtonDisabled
+            className={`hidden lg:flex items-center justify-center px-10 py-4 rounded-md shadow-xl text-lg font-bold uppercase tracking-widest transition-all duration-300 max-w-md w-full ${isNextButtonDisabled
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-brand-dark-green text-white hover:bg-brand-text'
+              : 'bg-brand-support text-brand-bg hover:bg-brand-support-hover'
               }`}
             aria-label={isNextButtonDisabled ? 'Completa el checklist para continuar' : 'Siguiente paso'}
           >
@@ -865,7 +865,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
             disabled={isNextButtonDisabled}
             className={`lg:hidden fixed bottom-0 left-0 right-0 w-full px-8 py-5 rounded-none shadow-2xl flex items-center justify-center space-x-3 text-lg font-bold uppercase tracking-widest transition-all duration-300 z-40 ${isNextButtonDisabled
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-brand-dark-green text-white hover:bg-brand-text'
+              : 'bg-brand-support text-brand-bg hover:bg-brand-support-hover'
               }`}
             aria-label={isNextButtonDisabled ? 'Completa el checklist para continuar' : 'Siguiente paso'}
           >
@@ -889,6 +889,8 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
         onClose={closePieceViewer3D}
         pieceName={selectedPiece3D?.name || ''}
         dimensions={selectedPiece3D?.dimensions || '10x10x1.5'}
+        modelUrl={selectedPiece3D?.modelUrl}
+        finishes={selectedPiece3D?.finishes}
       />
 
       {/* Elementos decorativos de fondo */}
@@ -897,13 +899,13 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.15 }}
           transition={{ duration: 1.5, ease: "easeOut", delay: 0.8 }}
-          className="absolute -top-1/4 -left-1/4 w-3/4 h-3/4 bg-brand-dark-green/10 rounded-full blur-3xl"
+          className="absolute -top-1/4 -left-1/4 w-3/4 h-3/4 bg-brand-support/10 rounded-md blur-3xl"
         />
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.1 }}
           transition={{ duration: 1.5, ease: "easeOut", delay: 1 }}
-          className="absolute -bottom-1/4 -right-1/4 w-2/3 h-2/3 bg-brand-text/10 rounded-full blur-3xl"
+          className="absolute -bottom-1/4 -right-1/4 w-2/3 h-2/3 bg-brand-support/10 rounded-md blur-3xl"
         />
       </div>
     </div>

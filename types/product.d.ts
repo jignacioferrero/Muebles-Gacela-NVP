@@ -18,4 +18,5 @@ export interface Product {
   specs: { label: string; value: string }[];
   inspirationImages: string[];
   suggestedProducts: Pick<Product, 'id' | 'title' | 'rating' | 'image'>[]; // Productos sugeridos, simplificados
+  youtubeVideo?: string; // Nuevo campo: URL del video de YouTube
 }

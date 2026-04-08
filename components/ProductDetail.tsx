@@ -66,9 +66,68 @@ const mockProductDetail: Product = {
   ],
 };
 
+import { useParams, useNavigate } from 'react-router-dom';
+import db from '../data/productos.json';
+import VideoViewer from './VideoViewer';
+
 const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onBackClick, onStartAssembly, onStartAR }) => {
-  // En una app real buscaríamos por ID. Aquí, si es el ID 1 (OSLO), usamos el mock completo.
-  const product = propProduct.id === 1 ? mockProductDetail : propProduct;
+  const { slug } = useParams();
+  const navigate = useNavigate();
+
+  // 1. Try to find the product in the local CMS DB by slug
+  const dbProduct = db.products.find(p => p.slug === slug);
+
+  // 2. Map DB Product into Component format. DB fields: SKU, Nombre_Comercial, Linea, Ambiente, Medidas_Mueble, Medidas_Logistica, URLs_Fotos, Manual_PDF, Relacionados
+  let parsedProduct = null;
+  
+  if (dbProduct) {
+    const fotos = dbProduct.URLs_Fotos ? dbProduct.URLs_Fotos.split(';') : [];
+    
+    let productSpecs = [
+      { label: 'Línea', value: dbProduct.Linea || '-' },
+      { label: 'Ambiente', value: dbProduct.Ambiente || '-' },
+      { label: 'Medidas', value: dbProduct.Medidas_Mueble || '-' },
+      { label: 'Logística', value: dbProduct.Medidas_Logistica || '-' }
+    ];
+
+    if (dbProduct.Especificaciones_Tecnicas) {
+      const extraSpecs = dbProduct.Especificaciones_Tecnicas.split('|').map(s => {
+        const parts = s.split(':');
+        if (parts.length >= 2) {
+          return { label: parts[0].trim(), value: parts.slice(1).join(':').trim() };
+        }
+        return { label: 'Detalle', value: s.trim() };
+      });
+      productSpecs = [...productSpecs, ...extraSpecs].filter(spec => spec.value !== '-');
+    }
+
+    parsedProduct = {
+      id: dbProduct.SKU, // use SKU as ID
+      title: dbProduct.Nombre_Comercial,
+      rating: 5,
+      image: fotos.length > 0 ? fotos[0] : 'https://placehold.co/600x600/f2f2f2/1a1a1a?text=Pendiente',
+      shortDescription: dbProduct.Descripcion_Corta || `${dbProduct.Linea || ''} - ${dbProduct.Ambiente || ''}. Medidas: ${dbProduct.Medidas_Mueble || 'N/A'}.`,
+      longDescription: dbProduct.Descripcion_Larga || `Descubre la elegancia y funcionalidad de ${dbProduct.Nombre_Comercial}. Ideal para tu ${dbProduct.Ambiente || 'hogar'}. Logística: ${dbProduct.Medidas_Logistica || 'N/A'}.`,
+      sku: dbProduct.SKU,
+      assemblyTime: 'Pendiente',
+      difficulty: 'Fácil',
+      assemblyTools: [],
+      mainImages: fotos.length > 0 ? fotos : ['https://placehold.co/600x600/f2f2f2/1a1a1a?text=Pendiente'],
+      thumbnails: fotos.length > 0 ? fotos : ['https://placehold.co/600x600/f2f2f2/1a1a1a?text=Pendiente'],
+      technicalImage: '',
+      specs: productSpecs,
+      inspirationImages: [],
+      suggestedProducts: [],
+      youtubeVideo: dbProduct.Video_YouTube || undefined
+    };
+  }
+
+  // Use parsed DB product, fallback to prop state (if clicked from Home PopularItems mock), fallback to mockProductDetail if ID is 1
+  const product = parsedProduct || (propProduct?.id === 1 ? mockProductDetail : propProduct);
+
+  if (!product) {
+    return <div className="py-24 text-center">Producto no encontrado. <button onClick={() => navigate('/productos')} className="text-brand-support underline">Ver Catálogo</button></div>;
+  }
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -86,7 +145,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
         {/* Botón de Volver */}
         <motion.button
           onClick={onBackClick}
-          className="mb-8 flex items-center text-brand-dark-green hover:text-brand-text transition-colors text-sm font-semibold group"
+          className="mb-8 flex items-center text-brand-primary hover:text-brand-primary transition-colors text-sm font-semibold group"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
@@ -117,14 +176,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-md shadow-md hover:bg-white transition-colors"
                     aria-label="Imagen anterior"
                   >
                     <ChevronLeft size={20} />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-md shadow-md hover:bg-white transition-colors"
                     aria-label="Imagen siguiente"
                   >
                     <ChevronRight size={20} />
@@ -140,7 +199,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
                     key={index}
                     src={thumbnail}
                     alt={`Miniatura ${index + 1}`}
-                    className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all ${currentImageIndex === index ? 'border-brand-dark-green ring-2 ring-brand-dark-green/30' : 'border-gray-200 hover:border-brand-dark-green/50'
+                    className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all ${currentImageIndex === index ? 'border-brand-support ring-2 ring-brand-dark-green/30' : 'border-gray-200 hover:border-brand-support/50'
                       }`}
                     onClick={() => setCurrentImageIndex(index)}
                     initial={{ opacity: 0, y: 10 }}
@@ -158,7 +217,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl md:text-5xl font-extralight text-brand-text mb-4 leading-tight"
+              className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary mb-6 leading-tight"
             >
               {product.title}
             </motion.h1>
@@ -166,7 +225,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-lg text-gray-600 mb-8 max-w-lg font-light"
+              className="text-lg text-[#594A42] font-clofie font-light leading-relaxed mb-8 max-w-lg"
             >
               {product.shortDescription}
             </motion.p>
@@ -175,7 +234,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-3xl font-bold text-brand-dark-green mb-10"
+              className="text-3xl font-bold text-brand-primary mb-10"
             >
               {product.price}
             </motion.p> */}
@@ -186,7 +245,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
                 onClick={() => onStartAR(product)} // Llama a la nueva función onStartAR
-                className="flex items-center justify-center px-8 py-3 bg-brand-dark-green text-white rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-brand-text transition-colors shadow-lg"
+                className="flex items-center justify-center px-8 py-3 bg-brand-support text-brand-bg rounded-md text-[14px] uppercase tracking-widest hover:bg-brand-support-hover transition-colors shadow-lg font-clofie font-bold italic"
               >
                 <BoxSelect size={18} className="mr-3" />
                 Probalo en tu espacio
@@ -196,7 +255,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
                 onClick={() => onStartAssembly(product)} // Llama a la nueva función
-                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-text rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-primary rounded-md text-[14px] uppercase tracking-widest hover:bg-gray-100 transition-colors font-clofie font-bold italic"
               >
                 <Wrench size={18} className="mr-3 text-gray-500" />
                 Instructivo de armado
@@ -213,10 +272,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
           transition={{ duration: 0.6 }}
           className="my-24 py-16 px-6 bg-white rounded-xl shadow-md max-w-4xl mx-auto text-center"
         >
-          <h2 className="text-xl md:text-2xl font-light tracking-[0.2em] uppercase text-brand-text/80 mb-6">
+          <h2 className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary leading-tight mb-8">
             Filosofía de Diseño
           </h2>
-          <p className="text-lg md:text-xl text-gray-700 font-light leading-relaxed">
+          <p className="text-lg text-[#594A42] font-clofie font-light leading-relaxed">
             {product.longDescription}
           </p>
         </motion.div>
@@ -242,19 +301,37 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            <h3 className="text-2xl font-light tracking-[0.2em] uppercase text-brand-text mb-8">
+            <h3 className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary leading-tight mb-8">
               Especificaciones Técnicas
             </h3>
-            <ul className="space-y-4 text-gray-700">
+            <ul className="space-y-4 text-[#594A42] font-clofie text-lg">
               {product.specs.map((spec, index) => (
                 <li key={index} className="flex justify-between items-center pb-2 border-b border-gray-100 last:border-b-0">
-                  <span className="font-semibold text-brand-text/90">{spec.label}:</span>
+                  <span className="font-semibold text-brand-primary/90">{spec.label}:</span>
                   <span className="font-light text-right">{spec.value}</span>
                 </li>
               ))}
             </ul>
           </motion.div>
         </div>
+
+        {/* COMPONENTE DE VIDEO */}
+        {product.youtubeVideo && (
+          <div className="my-24">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center leading-tight mb-12"
+            >
+              CONOCÉ MÁS DEL PRODUCTO
+            </motion.h2>
+            <div className="max-w-4xl mx-auto">
+              <VideoViewer videoUrl={product.youtubeVideo} title={`Video sobre ${product.title}`} />
+            </div>
+          </div>
+        )}
 
         {/* SECCIÓN "ESPACIOS GACELA" */}
         <div className="my-24 text-center">
@@ -263,7 +340,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-light tracking-[0.2em] uppercase text-brand-text mb-12"
+            className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center leading-tight mb-12"
           >
             INSPIRACIÓN PARA TU HOGAR
           </motion.h2>
@@ -294,7 +371,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-light tracking-[0.2em] uppercase text-brand-text text-center mb-12"
+            className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center leading-tight mb-12"
           >
             COMBINALOS CON
           </motion.h2>
@@ -320,7 +397,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-[14px] font-medium text-brand-text/90 group-hover:text-brand-dark-green transition-colors">{suggested.title}</h3>
+                  <h3 className="text-2xl font-godber text-brand-primary group-hover:text-brand-support transition-colors">{suggested.title}</h3>
                   {/* Eliminado: <p className="text-[13px] text-gray-400 font-light">{suggested.price}</p> */}
                 </div>
               </motion.div>

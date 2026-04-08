@@ -28,25 +28,25 @@ const AugmentedReality: React.FC<AugmentedRealityProps> = ({ onStartAR }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="text-2xl md:text-3xl font-light tracking-[0.3em] uppercase text-brand-text leading-[1.3] mb-8"
+                className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary leading-tight mb-8"
               >
                 IMAGINA TU ESPACIO,<br />
-                <span className="italic text-brand-dark-green/40">ANTES DE CREARLO.</span>
+                <span className="italic text-brand-primary/40">ANTES DE CREARLO.</span>
               </motion.h2>
 
-              <p className="text-lg md:text-xl text-gray-500 font-light leading-relaxed mb-12 text-left">
+              <p className="text-lg md:text-xl text-[#594A42] font-clofie font-light leading-relaxed mb-12 text-left">
                 Nuestra tecnología de Realidad Aumentada te permite proyectar cada pieza de nuestra colección directamente en tu ambiente. 
                 Sin medidas confusas, solo la certeza de que encaja perfectamente en tu hogar antes de realizar la compra.
               </p>
               
               <button 
                 onClick={onStartAR}
-                className="group flex items-center space-x-6 text-brand-dark-green transition-all duration-300"
+                className="group flex items-center space-x-6 text-brand-primary transition-all duration-300"
               >
-                <span className="text-[12px] font-bold tracking-[0.3em] uppercase border-b-[1.5px] border-brand-dark-green pb-2 transition-all group-hover:border-brand-text group-hover:text-brand-text">
+                <span className="text-[14px] tracking-[0.3em] uppercase border-b-[1.5px] border-brand-support pb-2 transition-all group-hover:border-brand-support group-hover:text-brand-support font-clofie font-bold italic">
                   Probar en mi espacio ahora
                 </span>
-                <div className="w-12 h-12 rounded-full border border-brand-dark-green/20 flex items-center justify-center group-hover:bg-brand-dark-green group-hover:text-white transition-all shadow-sm">
+                <div className="w-12 h-12 rounded-md border border-brand-support/20 flex items-center justify-center group-hover:bg-brand-support group-hover:text-brand-support transition-all shadow-sm">
                   <BoxSelect size={20} strokeWidth={1.2} />
                 </div>
               </button>
@@ -75,7 +75,7 @@ const AugmentedReality: React.FC<AugmentedRealityProps> = ({ onStartAR }) => {
               </div>
 
               {/* Halo de luz decorativo de fondo */}
-              <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-dark-green/5 blur-[100px] rounded-full opacity-60" />
+              <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-support/5 blur-[100px] rounded-md opacity-60" />
             </motion.div>
           </div>
 

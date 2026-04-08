@@ -152,7 +152,7 @@ const GaciBot: React.FC = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-16 h-16 bg-brand-dark-green rounded-full shadow-2xl flex items-center justify-center p-0 overflow-hidden border-2 border-white"
+                className="w-16 h-16 bg-brand-support rounded-full shadow-2xl flex items-center justify-center p-0 overflow-hidden border-2 border-white"
             >
                 <AnimatePresence mode="wait">
                     {isOpen ? (
@@ -188,12 +188,12 @@ const GaciBot: React.FC = () => {
                         className="absolute bottom-20 right-0 w-[350px] md:w-[400px] h-[550px] bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden border border-gray-100"
                     >
                         {/* Header */}
-                        <div className="bg-brand-dark-green p-6 text-white flex items-center space-x-4">
+                        <div className="bg-brand-support p-6 text-white flex items-center space-x-4">
                             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
                                 <Bot className="w-7 h-7" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-lg leading-tight">GaciBot</h3>
+                                <h3 className="font-bold text-lg leading-tight font-serif">GaciBot</h3>
                                 <p className="text-white/70 text-sm">Asistente de Experiencia</p>
                             </div>
                         </div>
@@ -209,8 +209,8 @@ const GaciBot: React.FC = () => {
                                 >
                                     <div
                                         className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm shadow-sm ${msg.type === 'user'
-                                            ? 'bg-brand-dark-green text-white rounded-tr-none'
-                                            : 'bg-white text-brand-text border border-gray-100 rounded-tl-none'
+                                            ? 'bg-brand-support text-brand-bg rounded-tr-none'
+                                            : 'bg-white text-brand-primary border border-gray-100 rounded-tl-none'
                                             }`}
                                     >
                                         {msg.text}
@@ -225,8 +225,8 @@ const GaciBot: React.FC = () => {
                                     className="flex justify-start"
                                 >
                                     <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl border border-gray-100 flex items-center space-x-2">
-                                        <Loader2 className="w-4 h-4 text-brand-dark-green animate-spin" />
-                                        <span className="text-xs text-brand-text/60 italic">Gaci está escribiendo...</span>
+                                        <Loader2 className="w-4 h-4 text-brand-primary animate-spin" />
+                                        <span className="text-xs text-brand-primary/60 italic">Gaci está escribiendo...</span>
                                     </div>
                                 </motion.div>
                             )}
@@ -250,7 +250,7 @@ const GaciBot: React.FC = () => {
                                 whileTap={{ scale: 0.95 }}
                                 type="submit"
                                 disabled={!inputValue.trim()}
-                                className="bg-brand-dark-green text-white p-3 rounded-2xl disabled:opacity-50 transition-all shadow-lg"
+                                className="bg-brand-support text-brand-bg p-3 rounded-2xl disabled:opacity-50 transition-all shadow-lg"
                             >
                                 <Send className="w-5 h-5" />
                             </motion.button>

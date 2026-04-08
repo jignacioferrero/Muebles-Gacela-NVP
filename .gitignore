@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent files
+.agent/
+.claude/
+.gemini/
+
+# Heavy Assets / Local documents
+documents/
+Modelos 3d/
+plantilla_productos.csv
+gacela-muebles---furniture-store.zip

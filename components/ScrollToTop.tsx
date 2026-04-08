@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-interface ScrollToTopProps {
-    view: string;
-    selectedProductId?: string | number | null;
-}
+const ScrollToTop = () => {
+    const { pathname } = useLocation();
 
-const ScrollToTop: React.FC<ScrollToTopProps> = ({ view, selectedProductId }) => {
     useEffect(() => {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth'
+            left: 0,
+            behavior: 'auto'
         });
-    }, [view, selectedProductId]);
+    }, [pathname]);
 
     return null;
 };

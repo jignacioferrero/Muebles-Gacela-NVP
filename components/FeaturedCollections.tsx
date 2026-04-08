@@ -14,7 +14,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ imageUrl, title, descri
       <img src={imageUrl} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90"></div>
       <div className="absolute bottom-0 left-0 p-8 text-white w-full">
-        <h3 className="text-2xl font-bold mb-2">{title}</h3>
+        <h3 className="text-2xl font-bold mb-2 font-serif">{title}</h3>
         <p className="text-sm text-gray-200 line-clamp-2">{description}</p>
         <div className="mt-4 overflow-hidden h-0 group-hover:h-8 transition-all duration-300">
            <span className="text-xs font-bold uppercase tracking-widest border-b border-white pb-1 cursor-pointer">Explorar colección</span>
@@ -30,10 +30,10 @@ const FeaturedCollections: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-brand-text mb-4">Colecciones Destacadas</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-brand-primary mb-4 font-serif">Colecciones Destacadas</h2>
             <p className="text-gray-600 text-lg">Descubre nuestra selección de piezas curadas para cada espacio de tu vida.</p>
           </div>
-          <button className="text-brand-dark-green font-bold border-b-2 border-brand-dark-green pb-1 hover:text-opacity-70 transition-all">Ver todo el catálogo</button>
+          <button className="text-brand-primary font-bold border-b-2 border-brand-support pb-1 hover:text-opacity-70 transition-all">Ver todo el catálogo</button>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

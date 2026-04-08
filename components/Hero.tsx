@@ -1,33 +1,41 @@
-
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const Hero: React.FC = () => {
   return (
-    <section 
-      className="relative h-[80vh] md:h-[90vh] bg-cover bg-center flex items-center" 
-      style={{ backgroundImage: "url('https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91132-dcace947/Recurso%2015.webp')" }}
-    >
-      {/* Superposición sutil para garantizar la legibilidad */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent"></div>
+    <section className="relative h-[500px] w-full flex items-center justify-center bg-[#ECE2D2] overflow-hidden">
       
-      <div className="relative container mx-auto px-6 lg:px-16 text-left">
-        <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 max-w-3xl leading-[1.1] tracking-tight drop-shadow-lg">
-          Encontrá el mueble ideal para complementar tu hogar
-        </h1>
-        
-        <p className="text-white/90 text-lg md:text-xl mb-10 max-w-xl leading-relaxed drop-shadow-md">
-          Diseños exclusivos que combinan elegancia, calidad y sostenibilidad para transformar cada rincón de tu casa.
+      {/* Background Image / Minimalist Japandi Style */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="/images/hero.webp" 
+          alt="Gacela Interior Design" 
+          className="w-full h-full object-cover object-center"
+        />
+        {/* Overlay para garantizar alto contraste entre el texto oscuro y la imagen fotográfica */}
+        <div className="absolute inset-0 bg-[#ECE2D2]/40"></div>
+      </div>
+      
+      {/* Hero Content - Centered */}
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 flex flex-col items-center justify-center text-center px-6"
+      >
+        <p className="font-outersans font-thin text-[14px] tracking-[0.4em] uppercase mb-4 text-[#2B341F]">
+          Diseños que combinan elegancia y sostenibilidad
         </p>
         
-        <div className="flex flex-col sm:flex-row items-start justify-start gap-5">
-          <button className="w-full sm:w-auto bg-brand-dark-green text-white px-12 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-brand-dark-green transition-all duration-300 transform hover:-translate-y-1 shadow-2xl">
-            Ver catálogo
-          </button>
-          <button className="w-full sm:w-auto border-2 border-white text-white px-12 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-brand-text transition-all duration-300 transform hover:-translate-y-1 shadow-xl backdrop-blur-sm">
-            Hablemos
-          </button>
-        </div>
-      </div>
+        <h1 className="font-godber text-4xl md:text-6xl font-normal tracking-[0.05em] uppercase text-[#2B341F] mb-8 max-w-4xl leading-tight">
+          El mueble ideal para <br className="hidden md:block"/> transformar tu hogar
+        </h1>
+        
+        <button className="mt-2 border border-[#2B341F] text-[#2B341F] px-12 py-3 rounded-[4px] hover:bg-[#2B341F] hover:text-[#ECE2D2] transition-colors duration-500 uppercase tracking-widest font-clofie font-bold italic text-[14px]">
+          Ver Catálogo
+        </button>
+      </motion.div>
+      
     </section>
   );
 };

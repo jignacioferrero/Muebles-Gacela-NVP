@@ -1,118 +1,170 @@
-
 import React, { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion'; // Importa AnimatePresence y motion
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import TopBar from './components/TopBar';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import CategoryGrid from './components/CategoryGrid';
-import PopularProducts from './components/PopularProducts';
-import QualitySustainability from './components/QualitySustainability';
-import AugmentedReality from './components/AugmentedReality';
-import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
-import ProductDetail from './components/ProductDetail'; // Nuevo componente PDP
-import GaciStepByStep from './components/GaciStepByStep'; // Nuevo componente GaciStepByStep
-import ARLandingPage from './components/ARLandingPage'; // Nuevo componente ARLandingPage
-import ScrollToTop from './components/ScrollToTop'; // Importar ScrollToTop
-import { Product } from './types/product'; // Importa la interfaz Product
-import GaciBot from './components/GaciBot'; // Importar GaciBot
+import Home from './components/Home';
+import Catalog from './components/Catalog';
+import ProductDetail from './components/ProductDetail';
+import GaciStepByStep from './components/GaciStepByStep';
+import ARLandingPage from './components/ARLandingPage';
+import ScrollToTop from './components/ScrollToTop';
+import Nosotros from './components/Nosotros';
+import Novedades from './components/Novedades';
+import SinglePost from './components/SinglePost';
+import { Product } from './types/product';
+import GaciBot from './components/GaciBot';
+import TermsAndConditions from './components/TermsAndConditions';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import WarrantyPolicy from './components/WarrantyPolicy';
+import FAQ from './components/FAQ';
+import ClaimsForm from './components/ClaimsForm';
+import WorkWithUs from './components/WorkWithUs';
+import Contacto from './components/Contacto';
+import Aberturas from './components/Aberturas';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'home' | 'pdp' | 'gaciStepByStep' | 'arLandingPage'>('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+  // We keep a temporary state for the selected product to pass full objects to components
+  // until the full CMS / data fetching by ID is implemented in Phase 2/3.
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
-    setView('pdp');
+    // Temporal route using product ID or a mock slug
+    navigate(`/productos/${product.id}`);
   };
 
   const handleLogoClick = () => {
-    setView('home');
-    setSelectedProduct(null); // Limpiar producto seleccionado al volver a Home
+    navigate('/');
+    setSelectedProduct(null);
   };
 
   const handleStartAssembly = (product: Product) => {
     setSelectedProduct(product);
-    setView('gaciStepByStep');
+    navigate(`/armado/${product.id}`);
   };
 
   const handleBackToPdp = () => {
-    setView('pdp');
-  }
+    navigate(-1); // Go back to previous route
+  };
 
   const handleStartAR = (product: Product | null) => {
-    // Si se viene desde PDP, el producto ya estará seleccionado.
-    // Si se llega de otra forma, se podría establecer aquí.
     setSelectedProduct(product);
-    setView('arLandingPage');
-  }
+    navigate(`/ar`);
+  };
+
+  // We need to map the view name for ScrollToTop compatibility during transition
+  const currentView = location.pathname === '/' ? 'home' : 
+                      location.pathname.includes('/productos/') ? 'pdp' : 
+                      location.pathname.includes('/armado/') ? 'gaciStepByStep' : 
+                      location.pathname.includes('/ar') ? 'arLandingPage' : 
+                      location.pathname.includes('/terminos-y-condiciones') || 
+                      location.pathname.includes('/politica-de-privacidad') ||
+                      location.pathname.includes('/politica-de-garantia') ||
+                      location.pathname.includes('/preguntas-frecuentes') ||
+                      location.pathname.includes('/formulario-de-reclamos') ||
+                      location.pathname.includes('/trabaja-con-nosotros') ? 'legal' : 'home';
 
   return (
-    <div className="bg-brand-bg font-sans text-brand-text">
-      <ScrollToTop view={view} selectedProductId={selectedProduct?.id} />
+    <div className="bg-brand-bg font-sans text-brand-primary">
+      <ScrollToTop />
       <TopBar />
       <Navbar onLogoClick={handleLogoClick} onProductClick={handleProductClick} />
 
       <main>
         <AnimatePresence mode="wait">
-          {view === 'home' && (
-            <motion.div
-              key="home"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <Hero />
-              <CategoryGrid />
-              <PopularProducts onProductClick={handleProductClick} />
-              <QualitySustainability />
-              <AugmentedReality onStartAR={() => handleStartAR(null)} /> {/* Pasa null si no hay un producto específico desde la Home */}
-              <Newsletter />
-            </motion.div>
-          )}
-          {view === 'pdp' && selectedProduct && (
-            <motion.div
-              key="pdp"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <ProductDetail
-                product={selectedProduct}
-                onBackClick={handleLogoClick}
-                onStartAssembly={handleStartAssembly}
-                onStartAR={handleStartAR}
-              />
-            </motion.div>
-          )}
-          {view === 'gaciStepByStep' && selectedProduct && (
-            <motion.div
-              key="gaciStepByStep"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <GaciStepByStep product={selectedProduct} onBackToPdp={handleBackToPdp} onBackToHome={handleLogoClick} />
-            </motion.div>
-          )}
-          {view === 'arLandingPage' && (
-            <motion.div
-              key="arLandingPage"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <ARLandingPage
-                onBackToPdp={handleBackToPdp}
-                initialSelectedProduct={selectedProduct} // Pasa el producto seleccionado si lo hay
-              />
-            </motion.div>
-          )}
+          <Routes location={location}>
+            <Route 
+              path="/" 
+              element={<Home onProductClick={handleProductClick} onStartAR={handleStartAR} />} 
+            />
+            <Route 
+              path="/nosotros" 
+              element={<Nosotros />} 
+            />
+            <Route 
+              path="/novedades" 
+              element={<Novedades />} 
+            />
+            <Route 
+              path="/novedades/:slug" 
+              element={<SinglePost />} 
+            />
+            <Route 
+              path="/productos" 
+              element={<Catalog />} 
+            />
+            {/* Phase 3: Products Route fetching from JSON via slug */}
+            <Route 
+              path="/productos/:slug" 
+              element={
+                <ProductDetail 
+                  product={selectedProduct} // Pass it if coming from home, ProductDetail will fallback to JSON if missing
+                  onBackClick={handleLogoClick} 
+                  onStartAssembly={handleStartAssembly} 
+                  onStartAR={handleStartAR} 
+                />
+              } 
+            />
+            <Route 
+              path="/armado/:slug" 
+              element={
+                selectedProduct ? (
+                  <GaciStepByStep 
+                    product={selectedProduct} 
+                    onBackToPdp={handleBackToPdp} 
+                    onBackToHome={handleLogoClick} 
+                  />
+                ) : (
+                  <div className="py-24 text-center">Producto no encontrado. <button onClick={() => navigate('/')} className="text-brand-support underline">Volver al inicio</button></div>
+                )
+              } 
+            />
+            <Route 
+              path="/ar" 
+              element={
+                <ARLandingPage 
+                  onBackToPdp={handleBackToPdp} 
+                  initialSelectedProduct={selectedProduct} 
+                />
+              } 
+            />
+            <Route 
+              path="/terminos-y-condiciones" 
+              element={<TermsAndConditions />} 
+            />
+            <Route 
+              path="/politica-de-privacidad" 
+              element={<PrivacyPolicy />} 
+            />
+            <Route 
+              path="/politica-de-garantia" 
+              element={<WarrantyPolicy />} 
+            />
+            <Route 
+              path="/preguntas-frecuentes" 
+              element={<FAQ />} 
+            />
+            <Route 
+              path="/formulario-de-reclamos" 
+              element={<ClaimsForm />} 
+            />
+            <Route 
+              path="/trabaja-con-nosotros" 
+              element={<WorkWithUs />} 
+            />
+            <Route 
+              path="/contacto" 
+              element={<Contacto />} 
+            />
+            <Route 
+              path="/aberturas" 
+              element={<Aberturas />} 
+            />
+          </Routes>
         </AnimatePresence>
       </main>
       <Footer />
@@ -122,6 +174,5 @@ const App: React.FC = () => {
     </div>
   );
 };
-
 
 export default App;

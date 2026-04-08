@@ -46,7 +46,7 @@ const VideoViewer: React.FC<VideoViewerProps> = ({ videoUrl, onClose }) => {
           >
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all z-50 group"
+              className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-md text-white transition-all z-50 group"
               aria-label="Cerrar video"
             >
               <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />

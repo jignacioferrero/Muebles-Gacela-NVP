@@ -152,7 +152,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
       {/* Botón de Volver Global */}
       <motion.button
         onClick={onBackToPdp}
-        className="absolute top-8 left-8 flex items-center text-brand-dark-green hover:text-brand-text transition-colors text-sm font-semibold group z-30"
+        className="absolute top-8 left-8 flex items-center text-brand-primary hover:text-brand-primary transition-colors text-sm font-semibold group z-30"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
@@ -173,15 +173,15 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-3xl text-center z-10 flex flex-col justify-center min-h-[calc(100vh-8rem)]"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extralight leading-tight text-brand-text mb-8">
-              Visualiza tu Futuro Espacio con <span className="font-medium text-brand-dark-green">Realidad Aumentada</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
+              Visualiza tu Futuro Espacio con <span className="font-medium text-brand-primary">Realidad Aumentada</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-12 max-w-2xl mx-auto">
               Proyecta virtualmente nuestros muebles en tu propia casa antes de comprar. ¡La decisión perfecta, garantizada!
             </p>
             <motion.button
               onClick={() => setCurrentStep('upload')}
-              className="inline-flex items-center justify-center px-10 py-4 rounded-full text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 bg-brand-dark-green text-white hover:bg-brand-text"
+              className="inline-flex items-center justify-center px-10 py-4 rounded-md text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 bg-brand-support text-brand-bg hover:bg-brand-support-hover"
               aria-label="Comenzar la experiencia de Realidad Aumentada"
             >
               <BoxSelect size={24} className="mr-3 group-hover:scale-110 transition-transform" />
@@ -200,7 +200,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-4xl w-full text-center z-10 flex flex-col justify-center items-center py-16"
           >
-            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-8">
+            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
               1. Tu espacio, tu lienzo.
             </h2>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-10 max-w-2xl">
@@ -229,7 +229,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center justify-center px-8 py-3 bg-brand-dark-green text-white rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-brand-text transition-colors shadow-lg"
+                className="flex items-center justify-center px-8 py-3 bg-brand-support text-brand-bg rounded-md text-sm font-semibold uppercase tracking-widest hover:bg-brand-support-hover transition-colors shadow-lg"
                 aria-label="Subir foto"
               >
                 <Upload size={18} className="mr-3" />
@@ -237,7 +237,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
               </button>
               <button
                 onClick={() => cameraInputRef.current?.click()}
-                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-text rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-primary rounded-md text-sm font-semibold uppercase tracking-widest hover:bg-gray-100 transition-colors"
                 aria-label="Tomar foto con cámara"
               >
                 <Camera size={18} className="mr-3 text-gray-500" />
@@ -268,9 +268,9 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             <motion.button
               onClick={() => setCurrentStep('selectProduct')}
               disabled={!uploadedImage}
-              className={`inline-flex items-center justify-center px-10 py-4 rounded-full text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 mt-12 ${!uploadedImage
+              className={`inline-flex items-center justify-center px-10 py-4 rounded-md text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 mt-12 ${!uploadedImage
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-brand-dark-green text-white hover:bg-brand-text'
+                : 'bg-brand-support text-brand-bg hover:bg-brand-support-hover'
                 }`}
               aria-label="Siguiente paso: seleccionar mueble"
             >
@@ -289,7 +289,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-6xl w-full text-center z-10 flex flex-col items-center py-16"
           >
-            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-8">
+            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
               2. Elige tu Gacela ideal.
             </h2>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-10 max-w-3xl">
@@ -303,7 +303,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
                   <button
                     key={line}
                     onClick={() => setSelectedLine(line)}
-                    className={`pb-2 text-[13px] md:text-[14px] uppercase tracking-[0.2em] font-medium transition-all relative ${selectedLine === line ? 'text-brand-dark-green' : 'text-gray-400 hover:text-brand-text'
+                    className={`pb-2 text-[13px] md:text-[14px] uppercase tracking-[0.2em] font-medium transition-all relative ${selectedLine === line ? 'text-brand-primary' : 'text-gray-400 hover:text-brand-primary'
                       }`}
                     aria-pressed={selectedLine === line}
                   >
@@ -311,7 +311,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
                     {selectedLine === line && (
                       <motion.div
                         layoutId="activeArLineUnderline"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-dark-green"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-support"
                       />
                     )}
                   </button>
@@ -338,7 +338,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.2, delay: 0.05 }}
                       onClick={() => setSelectedProduct(product)}
-                      className={`group cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all relative ${selectedProduct?.id === product.id ? 'border-4 border-brand-dark-green ring-2 ring-brand-dark-green/50' : 'border-2 border-gray-100 hover:border-brand-dark-green/30'
+                      className={`group cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all relative ${selectedProduct?.id === product.id ? 'border-4 border-brand-support ring-2 ring-brand-dark-green/50' : 'border-2 border-gray-100 hover:border-brand-support/30'
                         }`}
                       role="radio"
                       aria-checked={selectedProduct?.id === product.id}
@@ -350,7 +350,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
                         className="w-full aspect-[4/5] object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="p-4 bg-white">
-                        <h3 className="text-sm font-medium text-brand-text/90">{product.title}</h3>
+                        <h3 className="text-sm font-medium text-brand-primary/90 font-serif">{product.title}</h3>
                         <div className="flex mt-1">
                           {[...Array(5)].map((_, i) => (
                             <Star key={i} size={12} className={`${i < product.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-200'}`} />
@@ -358,7 +358,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
                         </div>
                       </div>
                       {selectedProduct?.id === product.id && (
-                        <div className="absolute top-2 right-2 bg-brand-dark-green text-white rounded-full p-1">
+                        <div className="absolute top-2 right-2 bg-brand-support text-brand-bg rounded-md p-1">
                           <Check size={16} />
                         </div>
                       )}
@@ -371,9 +371,9 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             <motion.button
               onClick={() => setCurrentStep('generate')}
               disabled={!selectedProduct}
-              className={`inline-flex items-center justify-center px-10 py-4 rounded-full text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 mt-12 ${!selectedProduct
+              className={`inline-flex items-center justify-center px-10 py-4 rounded-md text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 mt-12 ${!selectedProduct
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-brand-dark-green text-white hover:bg-brand-text'
+                : 'bg-brand-support text-brand-bg hover:bg-brand-support-hover'
                 }`}
               aria-label="Siguiente paso: generar imagen"
             >
@@ -392,7 +392,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-4xl w-full text-center z-10 flex flex-col justify-center items-center py-16"
           >
-            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-8">
+            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
               3. ¡La magia sucede!
             </h2>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-10 max-w-2xl">
@@ -406,7 +406,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
                   Tu Espacio
                 </div>
               </div>
-              <ArrowRight size={32} className="text-brand-dark-green" />
+              <ArrowRight size={32} className="text-brand-primary" />
               <div className="relative w-40 h-40 rounded-lg overflow-hidden shadow-md border border-gray-200">
                 <img src={selectedProduct?.image || ''} alt={selectedProduct?.title || 'Mueble'} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-bold uppercase p-2">
@@ -418,9 +418,9 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             <motion.button
               onClick={handleGenerateImage}
               disabled={isLoading}
-              className={`inline-flex items-center justify-center px-10 py-4 rounded-full text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 mt-12 ${isLoading
+              className={`inline-flex items-center justify-center px-10 py-4 rounded-md text-lg font-bold uppercase tracking-widest shadow-xl group transition-all duration-300 mt-12 ${isLoading
                 ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                : 'bg-brand-dark-green text-white hover:bg-brand-text'
+                : 'bg-brand-support text-brand-bg hover:bg-brand-support-hover'
                 }`}
               aria-label="Probar en mi espacio ahora"
             >
@@ -461,7 +461,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-4xl w-full text-center z-10 flex flex-col justify-center items-center py-16"
           >
-            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-text mb-8">
+            <h2 className="text-3xl md:text-5xl font-extralight leading-tight text-brand-primary mb-8 font-serif">
               ¡Tu nuevo espacio, visualizado!
             </h2>
             <p className="text-lg md:text-xl text-gray-700 font-light mb-10 max-w-2xl">
@@ -487,7 +487,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
               <a
                 href={generatedImageUrl}
                 download="gacela-ar-space.png"
-                className="flex items-center justify-center px-8 py-3 bg-brand-dark-green text-white rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-brand-text transition-colors shadow-lg"
+                className="flex items-center justify-center px-8 py-3 bg-brand-support text-brand-bg rounded-md text-sm font-semibold uppercase tracking-widest hover:bg-brand-support-hover transition-colors shadow-lg"
                 aria-label="Descargar imagen generada"
               >
                 <Download size={18} className="mr-3" />
@@ -495,7 +495,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
               </a>
               <button
                 onClick={() => setCurrentStep('selectProduct')}
-                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-text rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-primary rounded-md text-sm font-semibold uppercase tracking-widest hover:bg-gray-100 transition-colors"
                 aria-label="Probar otro mueble"
               >
                 <RefreshCw size={18} className="mr-3 text-gray-500" />
@@ -505,7 +505,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
               <button
                 onClick={resetAll}
-                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-text rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-primary rounded-md text-sm font-semibold uppercase tracking-widest hover:bg-gray-100 transition-colors"
                 aria-label="Volver a empezar todo el proceso"
               >
                 <Home size={18} className="mr-3 text-gray-500" />

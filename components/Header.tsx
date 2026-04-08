@@ -16,20 +16,20 @@ const Header: React.FC = () => {
           </a>
         </div>
         
-        <nav className="hidden lg:flex items-center space-x-10 text-[15px] font-medium text-brand-text">
-          <a href="#" className="hover:text-brand-dark-green transition-colors">Inicio</a>
-          <a href="#" className="hover:text-brand-dark-green transition-colors">Nosotros</a>
-          <a href="#" className="hover:text-brand-dark-green transition-colors">Novedades</a>
-          <a href="#" className="flex items-center hover:text-brand-dark-green transition-colors">
+        <nav className="hidden lg:flex items-center space-x-10 text-[15px] font-medium text-brand-primary">
+          <a href="#" className="hover:text-brand-primary transition-colors">Inicio</a>
+          <a href="#" className="hover:text-brand-primary transition-colors">Nosotros</a>
+          <a href="#" className="hover:text-brand-primary transition-colors">Novedades</a>
+          <a href="#" className="flex items-center hover:text-brand-primary transition-colors">
             Productos <ChevronDownIcon className="ml-1.5 h-4 w-4" />
           </a>
         </nav>
         
         <div className="flex items-center space-x-5">
-          <button className="text-brand-text hover:text-brand-dark-green transition-colors p-2">
+          <button className="text-brand-primary hover:text-brand-primary transition-colors p-2">
             <SearchIcon className="h-5 w-5" />
           </button>
-          <button className="flex items-center bg-brand-dark-green text-white px-5 py-2 rounded-full hover:bg-opacity-90 transition-all shadow-sm">
+          <button className="flex items-center bg-brand-support text-brand-bg px-5 py-2 rounded-md hover:bg-opacity-90 transition-all shadow-sm">
             <CartIcon className="h-5 w-5" />
             <span className="ml-2 text-sm font-semibold hidden sm:inline">Carrito</span>
           </button>

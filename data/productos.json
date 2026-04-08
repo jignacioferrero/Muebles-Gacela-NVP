@@ -1,0 +1,20 @@
+{
+  "products": [
+    {
+      "SKU": "GAC-TOKIO-01",
+      "Nombre_Comercial": "Escritorio Tokio",
+      "Linea": "Industrial",
+      "Ambiente": "Oficina",
+      "Medidas_Mueble": "120x75x60 cm",
+      "Medidas_Logistica": "20 kg, 1 bulto, 125x65x15 cm",
+      "URLs_Fotos": "https://ejemplo.com/foto1.jpg",
+      "Manual_PDF": "",
+      "Relacionados": "",
+      "Descripcion_Corta": "Escritorio minimalista ideal para home office",
+      "Descripcion_Larga": "Un diseño industrial único que combina resistencia y diseño. Combinalo con cualquier silla de la línea Gacela.",
+      "Especificaciones_Tecnicas": "Materialidad: Madera | Colores: Blanco y Roble",
+      "Video_YouTube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "slug": "escritorio-tokio-gac-tokio-01"
+    }
+  ]
+}

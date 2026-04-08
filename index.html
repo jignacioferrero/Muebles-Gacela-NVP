@@ -5,23 +5,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gacela Muebles</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      @font-face {
+        font-family: 'Godber';
+        src: url('/fonts/Godber-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'OuterSans';
+        src: url('/fonts/MADE Outer Sans Thin PERSONAL USE.otf') format('opentype');
+        font-weight: 100;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Clofie';
+        src: url('/fonts/Clofie-Light.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Clofie';
+        src: url('/fonts/Clofie-BoldItalic.ttf') format('truetype');
+        font-weight: bold;
+        font-style: italic;
+      }
+    </style>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              'brand-bg': '#F8F5F1',
-              'brand-dark-green': '#5F6C5C',
-              'brand-text': '#3a3a3a',
+              'brand-bg': '#ECE2D2',
+              'brand-card': '#C3B19B',
+              'brand-accent': '#9B754E',
+              'brand-support': '#4E5445',
+              'brand-primary': '#2B341F',
             },
             fontFamily: {
-              'serif': ['Inter', 'sans-serif'],
-              'sans': ['Inter', 'sans-serif'],
-              'dancing-script': ['"Dancing Script"', 'cursive'],
+              'serif': ['Montserrat', 'sans-serif'],
+              'sans': ['Roboto', 'sans-serif'],
+              'godber': ['Godber', 'sans-serif'],
+              'outersans': ['OuterSans', 'sans-serif'],
+              'clofie': ['Clofie', 'sans-serif'],
             }
           }
         }
@@ -41,7 +72,7 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+
 </head>
   <body>
     <div id="root"></div>

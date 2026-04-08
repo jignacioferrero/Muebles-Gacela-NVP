@@ -1,12 +1,11 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star } from 'lucide-react';
 import { Product } from '../types/product'; // Importa la interfaz Product
 
 // Datos de productos (simplificados para la Home, se expandirán para la PDP)
 export const productData: Record<string, Product[]> = {
-  Escandinava: [
+  Clásica: [
     // Added assemblyTime and difficulty to match Product interface
     // Added assemblyTools to match Product interface
     { id: 1, title: 'Set de mesas OSLO', rating: 5, image: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91369-bc36b6e0/Escena%20Art%20116.webp', shortDescription: 'Minimalista y funcional para tu living.', longDescription: '', sku: 'SN-ALB-001', assemblyTime: '60 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
@@ -27,7 +26,7 @@ export const productData: Record<string, Product[]> = {
     { id: 11, title: 'Bahiut NAGOYA', rating: 5, image: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91420-b316f6a3/Escena%20Art%20760250.webp', shortDescription: 'Elegancia y almacenamiento para tu comedor.', longDescription: '', sku: 'BH-NAG-011', assemblyTime: '90 minutos', difficulty: 'Difícil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
     { id: 12, title: 'Escritorio NIKKO', rating: 4, image: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91431-1278f77c/Escena%20Art%20334250.webp', shortDescription: 'Espacio de trabajo minimalista y funcional.', longDescription: '', sku: 'ES-NIK-012', assemblyTime: '75 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
   ],
-  Industrial: [
+  Curvalba: [
     // Added assemblyTime and difficulty to match Product interface
     // Added assemblyTools to match Product interface
     { id: 9, title: 'Mesa Loft Hierro y Roble', rating: 5, image: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=400&auto=format&fit=crop', shortDescription: 'Robusta y con carácter industrial.', longDescription: '', sku: 'ML-HIE-009', assemblyTime: '90 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
@@ -41,7 +40,7 @@ export const productData: Record<string, Product[]> = {
     // Added assemblyTools to match Product interface
     { id: 12, title: 'Estantería Pipe-Wood', rating: 4, image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=400&auto=format&fit=crop', shortDescription: 'Combina madera y metal para un look auténtico.', longDescription: '', sku: 'ET-PIP-012', assemblyTime: '75 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
   ],
-  Gamer: [
+  Lumo: [
     // Added assemblyTime and difficulty to match Product interface
     // Added assemblyTools to match Product interface
     { id: 13, title: 'Escritorio Gaci-Pro Carbon', rating: 5, image: 'https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?q=80&w=400&auto=format&fit=crop', shortDescription: 'Diseñado para el máximo rendimiento gamer.', longDescription: '', sku: 'EG-PRO-013', assemblyTime: '120 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
@@ -55,6 +54,24 @@ export const productData: Record<string, Product[]> = {
     // Added assemblyTools to match Product interface
     { id: 16, title: 'Módulo LED AmbiLight', rating: 4, image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&auto=format&fit=crop', shortDescription: 'Ambienta tu espacio gaming con luces dinámicas.', longDescription: '', sku: 'ML-AMB-016', assemblyTime: '20 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
   ],
+  Nordik: [
+    { id: 17, title: 'Rack TV Nordik', rating: 5, image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=400&auto=format&fit=crop', shortDescription: 'Diseño nórdico para tu centro de entretenimiento.', longDescription: '', sku: 'RK-NOR-017', assemblyTime: '60 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 18, title: 'Mesa Lateral Nordik', rating: 4, image: 'https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?q=80&w=400&auto=format&fit=crop', shortDescription: 'Acompañante ideal para tu descanso.', longDescription: '', sku: 'MS-NOR-018', assemblyTime: '20 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 19, title: 'Consola Recibidor Nordik', rating: 5, image: 'https://images.unsplash.com/photo-1540932239986-30128078f3c5?q=80&w=400&auto=format&fit=crop', shortDescription: 'Da la mejor bienvenida a tu hogar.', longDescription: '', sku: 'CN-NOR-019', assemblyTime: '45 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 20, title: 'Silla Nordik Premium', rating: 5, image: 'https://images.unsplash.com/photo-1506898667547-42dbf8c88f11?q=80&w=400&auto=format&fit=crop', shortDescription: 'Comodidad con estilo escandinavo puro.', longDescription: '', sku: 'SI-NOR-020', assemblyTime: '15 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+  ],
+  Infantil: [
+    { id: 21, title: 'Cuna Montessori Gaci', rating: 5, image: 'https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?q=80&w=400&auto=format&fit=crop', shortDescription: 'Crecimiento y libertad para los más pequeños.', longDescription: '', sku: 'CU-MON-021', assemblyTime: '60 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 22, title: 'Organizador de Juguetes', rating: 4, image: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=400&auto=format&fit=crop', shortDescription: 'Todo en su lugar con estilo.', longDescription: '', sku: 'OR-INF-022', assemblyTime: '30 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 23, title: 'Mesita y Sillas Kids', rating: 5, image: 'https://images.unsplash.com/photo-1549495503-4c92138eb15e?q=80&w=400&auto=format&fit=crop', shortDescription: 'El rincón de arte ideal.', longDescription: '', sku: 'CO-KID-023', assemblyTime: '20 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 24, title: 'Biblioteca de Pared', rating: 4, image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&auto=format&fit=crop', shortDescription: 'Fomenta el hábito de la lectura.', longDescription: '', sku: 'BI-WALL-024', assemblyTime: '40 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+  ],
+  Gamer: [
+    { id: 25, title: 'Escritorio Gaci-Pro Carbon', rating: 5, image: 'https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?q=80&w=400&auto=format&fit=crop', shortDescription: 'Diseñado para el máximo rendimiento gamer.', longDescription: '', sku: 'EG-PRO-025', assemblyTime: '120 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 26, title: 'Silla Ergonómica Titan', rating: 5, image: 'https://images.unsplash.com/photo-1598550476439-6847785fce66?q=80&w=400&auto=format&fit=crop', shortDescription: 'Comodidad superior para largas sesiones.', longDescription: '', sku: 'SE-TIT-026', assemblyTime: '90 minutos', difficulty: 'Media', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 27, title: 'Soporte Monitor Dual-G', rating: 4, image: 'https://images.unsplash.com/photo-1510511459019-5dee99cd4ff5?q=80&w=400&auto=format&fit=crop', shortDescription: 'Optimiza tu setup con doble monitor.', longDescription: '', sku: 'SM-DUAL-027', assemblyTime: '45 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+    { id: 28, title: 'Módulo LED AmbiLight', rating: 4, image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&auto=format&fit=crop', shortDescription: 'Ambienta tu espacio gaming con luces dinámicas.', longDescription: '', sku: 'ML-AMB-028', assemblyTime: '20 minutos', difficulty: 'Fácil', assemblyTools: [], mainImages: [], thumbnails: [], technicalImage: '', specs: [], inspirationImages: [], suggestedProducts: [] },
+  ],
 };
 
 interface PopularProductsProps {
@@ -62,55 +79,48 @@ interface PopularProductsProps {
 }
 
 const PopularProducts: React.FC<PopularProductsProps> = ({ onProductClick }) => {
-  const [activeTab, setActiveTab] = useState('Escandinava');
+  const [activeTab, setActiveTab] = useState('Clásica');
   const [isTitleHovered, setIsTitleHovered] = useState(false);
 
   return (
     <section className="pt-32 pb-24 bg-brand-bg transition-all duration-700">
       <div className="container mx-auto px-6 lg:px-12">
-        {/* Título alineado a la izquierda con línea animada */}
-        <div 
-          className="mb-14 inline-block group"
-          onMouseEnter={() => setIsTitleHovered(true)}
-          onMouseLeave={() => setIsTitleHovered(false)}
-        >
+        <div className="text-left mb-16">
           <motion.h2 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-2xl md:text-3xl font-light tracking-[0.3em] uppercase text-brand-text mb-4"
+            className="text-[14px] font-thin tracking-[0.4em] uppercase text-brand-support mb-4 font-outersans"
           >
-            NUESTRAS LÍNEAS MÁS BUSCADAS
+            Nuestra Colección
           </motion.h2>
-          
-          {/* Línea decorativa (Subtítulo visual) */}
-          <motion.div 
-            initial={{ width: 60 }}
-            animate={{ 
-              width: isTitleHovered ? 120 : 60,
-              backgroundColor: isTitleHovered ? '#5F6C5C' : '#D1D5DB'
-            }}
-            transition={{ duration: 0.6, ease: "circOut" }}
-            className="h-[1.5px]"
-          />
+          <motion.h3 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary leading-tight"
+          >
+            NUESTRAS LÍNEAS
+          </motion.h3>
         </div>
 
         {/* Mini Menú de Filtro (Tabs) */}
         <div className="flex justify-center mb-16">
-          <div className="flex space-x-4 md:space-x-12 border-b border-gray-200 w-full md:w-auto justify-center">
+          <div className="flex flex-wrap gap-y-4 space-x-4 md:space-x-12 border-b border-gray-200 w-full md:w-auto justify-center">
             {Object.keys(productData).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-4 text-[13px] md:text-[14px] uppercase tracking-[0.2em] font-medium transition-all relative ${
-                  activeTab === tab ? 'text-brand-dark-green' : 'text-gray-400 hover:text-brand-text'
+                className={`pb-4 text-[14px] uppercase tracking-widest transition-all relative font-clofie font-bold italic ${
+                  activeTab === tab ? 'text-brand-primary' : 'text-gray-400 hover:text-brand-primary'
                 }`}
               >
                 {tab}
                 {activeTab === tab && (
                   <motion.div 
                     layoutId="activeTabUnderline"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-dark-green"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-support"
                   />
                 )}
               </button>
@@ -142,19 +152,10 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ onProductClick }) => 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Star size={12} className="text-yellow-500 inline-block fill-yellow-500 mr-1" />
-                      <span className="text-[10px] font-bold">{product.rating}.0</span>
+                      <span className="text-[10px] uppercase tracking-tight font-clofie font-bold italic">Ver Producto</span>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="text-[14px] font-medium text-brand-text/90 group-hover:text-brand-dark-green transition-colors">{product.title}</h3>
-                    {/* Eliminado: <p className="text-[13px] text-gray-400 font-light">{product.price}</p> */}
-                    <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={10} className={`${i < product.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-200'}`} />
-                        ))}
-                      </div>
-                  </div>
+                    <h3 className="text-lg font-clofie font-light text-brand-primary/90 group-hover:text-brand-support transition-colors">{product.title}</h3>
                 </div>
               ))}
             </motion.div>
@@ -165,7 +166,7 @@ const PopularProducts: React.FC<PopularProductsProps> = ({ onProductClick }) => 
         <div className="mt-8 text-right">
           <a 
             href="#" 
-            className="inline-flex items-center text-[12px] md:text-[13px] uppercase tracking-[0.2em] text-brand-dark-green hover:text-brand-text font-medium transition-colors group"
+            className="inline-flex items-center text-[14px] uppercase tracking-widest text-[#9B754E] hover:text-[#594A42] transition-colors group font-clofie font-bold italic"
           >
             Ver toda la línea 
             <motion.span 
