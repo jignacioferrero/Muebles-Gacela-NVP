@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PUBLIC_DIR = path.join(__dirname, '../public');
-const ASSETS_DIR = path.join(PUBLIC_DIR, 'Artículos Gacela Muebles 2026');
+const ASSETS_DIR = path.join(PUBLIC_DIR, 'articulos-gacela-muebles-2026');
 const INPUT_CSV = path.join(__dirname, '../plantilla_productos.csv');
 const OUTPUT_CSV = path.join(__dirname, '../plantilla_productos_sincronizada.csv');
 
@@ -97,23 +97,30 @@ function scan() {
   const newProductsMap = new Map();
 
   for (const lineaFolder of lineas) {
-    const lineaName = lineaFolder.replace('Línea', '').trim();
+    // Maneja tanto "Línea Clásica" como "linea-clasica"
+    const lineaName = lineaFolder.replace(/^linea-/i, '').replace('Línea', '').replace(/-/g, ' ').trim();
     const lineaPath = path.join(ASSETS_DIR, lineaFolder);
     const productFolders = fs.readdirSync(lineaPath).filter(f => fs.statSync(path.join(lineaPath, f)).isDirectory());
     
     for (const prodFolder of productFolders) {
-       // Extract SKU using Regex
-       // Ej: "Art 902-2 (Bahiut GAMMEL)" -> SKU: 902-2
-       const match = prodFolder.match(/Art\s+([A-Za-z0-9\-]+)\s*\((.*)\)/i);
+       // Compatible con viejo formato "Art 902-2 (Name)" y el nuevo normalizado "art-902-2-name"
        let sku = '';
        let nombreComercial = '';
-       if (match) {
-         sku = match[1].trim();
-         nombreComercial = match[2].trim();
+       
+       const matchOld = prodFolder.match(/Art\s+([A-Za-z0-9\-]+)\s*\((.*)\)/i);
+       const matchNew = prodFolder.match(/^art-([0-9a-z]+(?:-[0-9a-z]+)?)-(.*)$/i);
+       
+       if (matchOld) {
+         sku = matchOld[1].trim();
+         nombreComercial = matchOld[2].trim();
+       } else if (matchNew) {
+         sku = matchNew[1].trim().toUpperCase();
+         nombreComercial = matchNew[2].replace(/-/g, ' ').trim().toUpperCase();
        } else {
-         // Fallback logic
-         sku = prodFolder.split(' ')[1] || prodFolder;
-         nombreComercial = prodFolder;
+         // Fallback logic: toma el bloque entre guiones
+         const parts = prodFolder.split('-');
+         sku = parts[1] || prodFolder;
+         nombreComercial = prodFolder.replace(/-/g, ' ').toUpperCase();
        }
        
        scannedSkus.add(sku);
@@ -131,7 +138,7 @@ function scan() {
          const ext = path.extname(file).toLowerCase();
          const fileName = file.toLowerCase();
          // El path relativo arranca con "/" para funcionar directo en el frontend
-         const relativePath = `/Artículos Gacela Muebles 2026/${lineaFolder}/${prodFolder}/${file}`.replace(/\\/g, '/');
+         const relativePath = `/articulos-gacela-muebles-2026/${lineaFolder}/${prodFolder}/${file}`.replace(/\\/g, '/');
 
          if (ext === '.pdf') {
             manualPdf = relativePath;

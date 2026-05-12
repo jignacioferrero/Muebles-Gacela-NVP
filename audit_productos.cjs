@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT_DIR = path.join(__dirname, 'Artículos Gacela Muebles 2026');
+const ROOT_DIR = path.join(__dirname, 'articulos-gacela-muebles-2026');
 const CSV_FILE = path.join(__dirname, 'productos_auditados.csv');
 const REPORT_FILE = path.join(__dirname, 'reporte_faltantes.txt');
 
@@ -149,9 +149,9 @@ Object.keys(products).forEach(key => {
             '', // Ambiente
             color === 'Unico/Default' ? '' : color,
             '', '', '', '', '', '', // Descripcion, Medidas, etc.
-            fotoMedidas ? `/Artículos Gacela Muebles 2026/${fotoMedidas}` : '',
-            todasFotos.map(p => `/Artículos Gacela Muebles 2026/${p}`).join(','),
-            manualPdf ? `/Artículos Gacela Muebles 2026/${manualPdf}` : '',
+            fotoMedidas ? `/articulos-gacela-muebles-2026/${fotoMedidas}` : '',
+            todasFotos.map(p => `/articulos-gacela-muebles-2026/${p}`).join(','),
+            manualPdf ? `/articulos-gacela-muebles-2026/${manualPdf}` : '',
             '' // Relacionados
         ];
 
