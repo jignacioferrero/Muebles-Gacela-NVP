@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Hero: React.FC = () => {
   return (
@@ -31,9 +32,9 @@ const Hero: React.FC = () => {
           El mueble ideal para <br className="hidden md:block"/> transformar tu hogar
         </h1>
         
-        <button className="mt-2 border border-[#2B341F] text-[#2B341F] px-12 py-3 rounded-[4px] hover:bg-[#2B341F] hover:text-[#ECE2D2] transition-colors duration-500 uppercase tracking-widest font-clofie font-bold italic text-[14px]">
-          Ver Catálogo
-        </button>
+        <Link to="/productos" onClick={() => window.scrollTo(0, 0)} className="mt-2 border border-[#2B341F] text-[#2B341F] px-12 py-3 rounded-[4px] hover:bg-[#2B341F] hover:text-[#ECE2D2] transition-colors duration-500 uppercase tracking-widest font-clofie font-bold italic text-[14px] inline-block">
+          Ver Portfolio
+        </Link>
       </motion.div>
       
     </section>

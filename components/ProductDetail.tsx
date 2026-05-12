@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, BoxSelect, Wrench, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, ArrowRightCircle, Star, MessageCircle } from 'lucide-react';
 import { Product } from '../types/product'; // Importa la interfaz Product
 
 interface ProductDetailProps {
@@ -45,19 +45,15 @@ const mockProductDetail: Product = {
     'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29581-1467c049/116R%20Real%20patas%20FF.jpg',
   ],
   technicalImage: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29553-d31928df/Art%20116%20%28Roble%20Natural-Blanco%29%20-%20Cotas.jpg', // Imagen técnica actualizada
-  specs: [ // Especificaciones ajustadas para las mesas
-    { label: 'Materiales', value: 'Madera de Paraíso / Melamina Blanca' },
-    { label: 'Dimensiones (Mesa Grande)', value: 'Alto: 40cm | Diámetro: 60cm' },
-    { label: 'Dimensiones (Mesa Pequeña)', value: 'Alto: 35cm | Diámetro: 40cm' },
-    { label: 'Peso máximo soportado', value: '20 kg por mesa' },
-    { label: 'Origen', value: 'Argentina' },
-    { label: 'Garantía', value: '1 año' },
+  specs: [ // Campos obligatorios CSV-ready
+    { label: 'Línea', value: 'Nordik' },
+    { label: 'Ambiente', value: 'Sala de Estar' },
+    { label: 'Dimensiones', value: 'Mesa Baja: 60cm ø x 30cm / Mesa Alta: 45cm ø x 63cm' },
+    { label: 'Color', value: 'Blanco - Roble Miel' },
   ],
-  inspirationImages: [ // Imágenes de inspiración actualizadas
-    'https://i.postimg.cc/wjVv3sF3/Gemini-Generated-Image-1inlfe1inlfe1inl.png',
-    'https://i.postimg.cc/N0Cjkq3L/Gemini-Generated-Image-97bfic97bfic97bf.png',
-    'https://i.postimg.cc/wB4jQ8C7/Gemini-Generated-Image-t314xqt314xqt314.png',
-  ],
+  inspirationImages: [],
+  manualPdf: '#', // Mapeado al campo Manual_PDF del CSV
+  assemblyUrl: '#', // Mapeado al campo Instructivo_Armado del CSV
   suggestedProducts: [ // Productos sugeridos actualizados
     { id: 201, title: 'Torre HELSINKI', rating: 4, image: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91372-597a4125/Escena%20Art%20322020.webp' },
     { id: 202, title: 'Torre TROMSO', rating: 5, image: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91367-b135e62f/Escena%20Art%20322021.webp' },
@@ -71,35 +67,42 @@ import db from '../data/productos.json';
 import VideoViewer from './VideoViewer';
 
 const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onBackClick, onStartAssembly, onStartAR }) => {
-  const { slug } = useParams();
+  const { linea, sku } = useParams();
   const navigate = useNavigate();
 
-  // 1. Try to find the product in the local CMS DB by slug
-  const dbProduct = db.products.find(p => p.slug === slug);
+  // 1. Try to find the product in the local CMS DB by SKU
+  const dbProduct = db.products.find(p => String(p.SKU) === String(sku));
 
   // 2. Map DB Product into Component format. DB fields: SKU, Nombre_Comercial, Linea, Ambiente, Medidas_Mueble, Medidas_Logistica, URLs_Fotos, Manual_PDF, Relacionados
   let parsedProduct = null;
   
   if (dbProduct) {
-    const fotos = dbProduct.URLs_Fotos ? dbProduct.URLs_Fotos.split(';') : [];
+    const fotos = dbProduct.Fotos_Mueble ? dbProduct.Fotos_Mueble.split(/[;,]\s*/).filter(Boolean) : [];
     
+    // Mandatory technical spec fields for CSV-ready structure
     let productSpecs = [
       { label: 'Línea', value: dbProduct.Linea || '-' },
       { label: 'Ambiente', value: dbProduct.Ambiente || '-' },
-      { label: 'Medidas', value: dbProduct.Medidas_Mueble || '-' },
-      { label: 'Logística', value: dbProduct.Medidas_Logistica || '-' }
-    ];
+      { label: 'Dimensiones', value: dbProduct.Medidas_Mueble || '-' },
+      { label: 'Color', value: (dbProduct as any).Color || '-' },
+    ].filter(spec => spec.value !== '-');
 
-    if (dbProduct.Especificaciones_Tecnicas) {
-      const extraSpecs = dbProduct.Especificaciones_Tecnicas.split('|').map(s => {
-        const parts = s.split(':');
-        if (parts.length >= 2) {
-          return { label: parts[0].trim(), value: parts.slice(1).join(':').trim() };
-        }
-        return { label: 'Detalle', value: s.trim() };
-      });
-      productSpecs = [...productSpecs, ...extraSpecs].filter(spec => spec.value !== '-');
-    }
+    // Extra technical details like Materiales have been removed as requested.
+    // Suggested products logic: find products by SKUs in "Relacionados" column
+    const relatedSkus = dbProduct.Relacionados ? dbProduct.Relacionados.split(/[;,]\s*/).filter(sku => sku && sku !== dbProduct.SKU) : [];
+    const suggestedFromDb = relatedSkus
+      .map(sku => db.products.find(p => p.SKU === sku))
+      .filter(Boolean)
+      .map(p => ({
+        id: p!.SKU,
+        title: p!.Nombre_Comercial,
+        image: p!.Fotos_Mueble ? p!.Fotos_Mueble.split(/[;,]\s*/)[0] : 'https://placehold.co/600x600/f2f2f2/1a1a1a?text=Pendiente',
+        linea: p!.Linea
+      }));
+
+    // Fallback to 4 mock products if no related ones are found (as requested for reference)
+    const fallbackSuggested = mockProductDetail.suggestedProducts || [];
+    const finalSuggested = suggestedFromDb.length > 0 ? suggestedFromDb : fallbackSuggested;
 
     parsedProduct = {
       id: dbProduct.SKU, // use SKU as ID
@@ -107,18 +110,20 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
       rating: 5,
       image: fotos.length > 0 ? fotos[0] : 'https://placehold.co/600x600/f2f2f2/1a1a1a?text=Pendiente',
       shortDescription: dbProduct.Descripcion_Corta || `${dbProduct.Linea || ''} - ${dbProduct.Ambiente || ''}. Medidas: ${dbProduct.Medidas_Mueble || 'N/A'}.`,
-      longDescription: dbProduct.Descripcion_Larga || `Descubre la elegancia y funcionalidad de ${dbProduct.Nombre_Comercial}. Ideal para tu ${dbProduct.Ambiente || 'hogar'}. Logística: ${dbProduct.Medidas_Logistica || 'N/A'}.`,
+      longDescription: dbProduct.Descripcion_Larga || `Descubre la elegancia y funcionalidad de ${dbProduct.Nombre_Comercial}. Ideal para tu ${dbProduct.Ambiente || 'hogar'}.`,
       sku: dbProduct.SKU,
       assemblyTime: 'Pendiente',
       difficulty: 'Fácil',
       assemblyTools: [],
       mainImages: fotos.length > 0 ? fotos : ['https://placehold.co/600x600/f2f2f2/1a1a1a?text=Pendiente'],
       thumbnails: fotos.length > 0 ? fotos : ['https://placehold.co/600x600/f2f2f2/1a1a1a?text=Pendiente'],
-      technicalImage: '',
+      technicalImage: dbProduct.Foto_Medidas || '',
       specs: productSpecs,
       inspirationImages: [],
-      suggestedProducts: [],
-      youtubeVideo: dbProduct.Video_YouTube || undefined
+      suggestedProducts: finalSuggested,
+      youtubeVideo: undefined,
+      manualPdf: dbProduct.Manual_PDF || undefined,
+      assemblyUrl: undefined,
     };
   }
 
@@ -126,21 +131,22 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
   const product = parsedProduct || (propProduct?.id === 1 ? mockProductDetail : propProduct);
 
   if (!product) {
-    return <div className="py-24 text-center">Producto no encontrado. <button onClick={() => navigate('/productos')} className="text-brand-support underline">Ver Catálogo</button></div>;
+    return <div className="py-24 text-center">Producto no encontrado. <button onClick={() => navigate('/productos')} className="text-brand-support underline">Ver Portfolio</button></div>;
   }
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % product.mainImages.length);
+    setCurrentImageIndex((prev) => (prev + 1) % (product.mainImages?.length || 1));
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + product.mainImages.length) % product.mainImages.length);
+    setCurrentImageIndex((prev) => (prev - 1 + (product.mainImages?.length || 1)) % (product.mainImages?.length || 1));
   };
 
   return (
-    <div className="bg-brand-bg pt-12 pb-24">
+    <div className="bg-brand-bg pt-12 pb-32 lg:pb-24">
       <div className="container mx-auto px-6 lg:px-12">
         {/* Botón de Volver */}
         <motion.button
@@ -159,11 +165,11 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
           {/* Izquierda: Galería de Imágenes */}
           <div className="flex flex-col">
             <motion.div
-              key={currentImageIndex} // Key para animar el cambio de imagen
+              key={currentImageIndex}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative aspect-square md:aspect-[5/4] rounded-xl overflow-hidden bg-white shadow-lg mb-6"
+              className="relative aspect-square md:aspect-[5/4] w-full rounded-xl overflow-hidden bg-white shadow-lg mb-6 flex items-center justify-center"
             >
               <img
                 src={product.mainImages && product.mainImages.length > 0
@@ -176,14 +182,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-md shadow-md hover:bg-white transition-colors"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors"
                     aria-label="Imagen anterior"
                   >
                     <ChevronLeft size={20} />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-md shadow-md hover:bg-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/70 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors"
                     aria-label="Imagen siguiente"
                   >
                     <ChevronRight size={20} />
@@ -192,74 +198,96 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
               )}
             </motion.div>
 
-            {product.thumbnails && product.thumbnails.length > 0 && (
-              <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-                {product.thumbnails.map((thumbnail, index) => (
-                  <motion.img
+            {/* Fila fija de 5 miniaturas */}
+            <div className="grid grid-cols-5 gap-3 w-full">
+              {Array.from({ length: 5 }).map((_, index) => {
+                const photo = (product.thumbnails && product.thumbnails[index]) || 'https://placehold.co/100x100/f2f2f2/f2f2f2';
+                const isSelected = currentImageIndex === index;
+                const hasPhoto = index < (product.thumbnails?.length || 0);
+
+                return (
+                  <motion.div
                     key={index}
-                    src={thumbnail}
-                    alt={`Miniatura ${index + 1}`}
-                    className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all ${currentImageIndex === index ? 'border-brand-support ring-2 ring-brand-dark-green/30' : 'border-gray-200 hover:border-brand-support/50'
-                      }`}
-                    onClick={() => setCurrentImageIndex(index)}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                  />
-                ))}
-              </div>
-            )}
+                    transition={{ delay: 0.05 * index }}
+                    className={`relative aspect-square rounded-lg overflow-hidden border-2 cursor-pointer transition-all ${
+                      isSelected && hasPhoto ? 'border-brand-support shadow-sm' : 'border-gray-100'
+                    } ${!hasPhoto ? 'cursor-default opacity-50' : 'hover:border-brand-support/40'}`}
+                    onClick={() => hasPhoto && setCurrentImageIndex(index)}
+                  >
+                    <img
+                      src={photo}
+                      alt={`Miniatura ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Derecha: Info Rápida y Botones */}
-          <div className="flex flex-col justify-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary mb-6 leading-tight"
-            >
-              {product.title}
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-lg text-[#594A42] font-clofie font-light leading-relaxed mb-8 max-w-lg"
-            >
-              {product.shortDescription}
-            </motion.p>
-            {/* Eliminado: Precio
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-3xl font-bold text-brand-primary mb-10"
-            >
-              {product.price}
-            </motion.p> */}
+          <div className="flex flex-col justify-center max-w-xl">
+            <div className="mb-10">
+              {(() => {
+                const titleParts = product.title.split('(');
+                const mainTitle = titleParts[0].trim();
+                const colorPart = titleParts.length > 1 ? titleParts[1].replace(')', '').trim() : '';
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <motion.button
+                return (
+                  <>
+                    <motion.h1
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                      className="text-xl md:text-[28px] font-godber font-normal tracking-[0.03em] uppercase text-brand-primary mb-2 leading-[1.2]"
+                    >
+                      {mainTitle}
+                    </motion.h1>
+                    
+                    {colorPart && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                        className="text-[11px] uppercase tracking-[0.2em] text-brand-support font-clofie font-bold italic mb-6 flex items-center gap-2"
+                      >
+                        Color: {colorPart}
+                      </motion.div>
+                    )}
+                  </>
+                );
+              })()}
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-base md:text-lg text-[#594A42]/80 font-clofie font-light leading-relaxed max-w-md"
+              >
+                {product.shortDescription}
+              </motion.p>
+            </div>
+
+            {/* Botonera de Soporte */}
+            <div className="flex flex-col gap-4 w-full sm:max-w-md">
+              <motion.a
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                onClick={() => onStartAR(product)} // Llama a la nueva función onStartAR
-                className="flex items-center justify-center px-8 py-3 bg-brand-support text-brand-bg rounded-md text-[14px] uppercase tracking-widest hover:bg-brand-support-hover transition-colors shadow-lg font-clofie font-bold italic"
+                href={product.manualPdf || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center px-7 py-3.5 bg-brand-support text-brand-bg rounded-md text-[13px] uppercase tracking-widest hover:bg-brand-support-hover transition-all shadow-lg hover:shadow-xl font-clofie font-bold italic w-full"
               >
-                <BoxSelect size={18} className="mr-3" />
-                Probalo en tu espacio
-              </motion.button>
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                onClick={() => onStartAssembly(product)} // Llama a la nueva función
-                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-brand-primary rounded-md text-[14px] uppercase tracking-widest hover:bg-gray-100 transition-colors font-clofie font-bold italic"
-              >
-                <Wrench size={18} className="mr-3 text-gray-500" />
-                Instructivo de armado
-              </motion.button>
+                <Download size={17} className="mr-2.5 shrink-0" />
+                Descargar Manual PDF
+              </motion.a>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Armado Guiado y Video eliminados temporalmente a pedido del usuario */}
+              </div>
             </div>
           </div>
         </div>
@@ -268,142 +296,115 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProduct, onB
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.6 }}
-          className="my-24 py-16 px-6 bg-white rounded-xl shadow-md max-w-4xl mx-auto text-center"
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7 }}
+          className="my-20 max-w-3xl mx-auto text-center"
         >
-          <h2 className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary leading-tight mb-8">
-            Filosofía de Diseño
-          </h2>
-          <p className="text-lg text-[#594A42] font-clofie font-light leading-relaxed">
-            {product.longDescription}
-          </p>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <span className="block h-px w-12 bg-brand-support/50" />
+            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-support font-clofie font-semibold">Filosofía de Diseño</span>
+            <span className="block h-px w-12 bg-brand-support/50" />
+          </div>
+          <blockquote>
+            <p className="text-base md:text-lg text-[#594A42]/80 font-clofie font-light italic leading-[2]">
+              {product.longDescription}
+            </p>
+          </blockquote>
         </motion.div>
 
         {/* ESPECIFICACIONES TÉCNICAS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center my-24">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7 }}
-            className="flex justify-center"
-          >
-            <img
-              src={product.technicalImage}
-              alt="Plano técnico del producto"
-              className="w-full max-w-md h-auto object-contain bg-white p-8 rounded-xl shadow-md"
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-          >
-            <h3 className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary leading-tight mb-8">
-              Especificaciones Técnicas
-            </h3>
-            <ul className="space-y-4 text-[#594A42] font-clofie text-lg">
-              {product.specs.map((spec, index) => (
-                <li key={index} className="flex justify-between items-center pb-2 border-b border-gray-100 last:border-b-0">
-                  <span className="font-semibold text-brand-primary/90">{spec.label}:</span>
-                  <span className="font-light text-right">{spec.value}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+        <div className="my-24">
+          <h3 className="text-xl md:text-3xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center mb-16">
+            Especificaciones Técnicas
+          </h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-center">
+            {product.technicalImage ? (
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="flex flex-col items-center"
+              >
+                <div className="text-[10px] uppercase tracking-widest text-brand-support mb-4 font-clofie font-bold">Referencia de Medidas</div>
+                <img
+                  src={product.technicalImage}
+                  alt="Plano técnico del producto"
+                  className="w-full max-w-lg h-auto object-contain bg-white p-6 rounded-xl shadow-sm border border-gray-50"
+                />
+              </motion.div>
+            ) : (
+              <div /> // Placeholder if no technical image to keep grid layout
+            )}
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-0"
+            >
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
+                {product.specs.map((spec, index) => (
+                  <div key={index} className="py-4 border-b border-gray-100 last:border-b-0">
+                    <dt className="text-[10px] uppercase tracking-[0.15em] text-brand-primary/50 font-clofie font-bold mb-1">{spec.label}</dt>
+                    <dd className="text-[14px] md:text-base text-[#594A42] font-clofie font-light leading-snug">{spec.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </motion.div>
+          </div>
         </div>
 
-        {/* COMPONENTE DE VIDEO */}
+        {/* DIÁLOGO DE VIDEO */}
         {product.youtubeVideo && (
+          <VideoViewer 
+            videoUrl={isVideoOpen ? product.youtubeVideo : null} 
+            onClose={() => setIsVideoOpen(false)} 
+          />
+        )}
+
+        {/* PRODUCTOS RELACIONADOS */}
+        {product.suggestedProducts && product.suggestedProducts.length > 0 && (
           <div className="my-24">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center leading-tight mb-12"
+              className="text-xl md:text-2xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center leading-tight mb-10"
             >
-              CONOCÉ MÁS DEL PRODUCTO
+              PRODUCTOS RELACIONADOS
             </motion.h2>
-            <div className="max-w-4xl mx-auto">
-              <VideoViewer videoUrl={product.youtubeVideo} title={`Video sobre ${product.title}`} />
+            <div className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible pb-4 md:pb-0 snap-x snap-mandatory">
+              {product.suggestedProducts.slice(0, 4).map((suggested, index) => (
+                <motion.div
+                  key={suggested.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group cursor-pointer shrink-0 w-[72vw] sm:w-[48vw] md:w-auto snap-start"
+                  onClick={() => {
+                    const lineaSlug = suggested.linea ? String(suggested.linea).toLowerCase().replace(/\s+/g, '-') : 'producto';
+                    navigate(`/${lineaSlug}/${suggested.id}`);
+                    window.scrollTo(0, 0);
+                  }}
+                >
+                  <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                    <img
+                      src={suggested.image}
+                      alt={suggested.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base md:text-lg font-godber text-brand-primary group-hover:text-brand-support transition-colors">{suggested.title}</h3>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         )}
-
-        {/* SECCIÓN "ESPACIOS GACELA" */}
-        <div className="my-24 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center leading-tight mb-12"
-          >
-            INSPIRACIÓN PARA TU HOGAR
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {product.inspirationImages.map((img, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="aspect-video overflow-hidden rounded-xl shadow-md group"
-              >
-                <img
-                  src={img}
-                  alt={`Inspiración ${index + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* SECCIÓN "COMBINALOS CON" */}
-        <div className="my-24">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-6xl font-godber font-normal tracking-[0.05em] uppercase text-brand-primary text-center leading-tight mb-12"
-          >
-            COMBINALOS CON
-          </motion.h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {product.suggestedProducts.map((suggested, index) => (
-              <motion.div
-                key={suggested.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group cursor-pointer"
-              >
-                <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300">
-                  <img
-                    src={suggested.image}
-                    alt={suggested.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Star size={12} className="text-yellow-500 inline-block fill-yellow-500 mr-1" />
-                    <span className="text-[10px] font-bold">{suggested.rating}.0</span>
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-2xl font-godber text-brand-primary group-hover:text-brand-support transition-colors">{suggested.title}</h3>
-                  {/* Eliminado: <p className="text-[13px] text-gray-400 font-light">{suggested.price}</p> */}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

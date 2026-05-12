@@ -9,12 +9,19 @@ import {
   Instagram,
   Menu,
   X,
-  ChevronDown
+  ChevronDown,
+  ChevronRight,
+  Briefcase,
+  Phone,
+  HelpCircle,
+  FileText,
+  Mail
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Product } from '../types/product';
 import { productData } from './PopularProducts';
+import db from '../data/productos.json';
 
 // Custom icons to visually represent specific pieces of furniture
 const TvStandIcon = ({ size = 24, className = "" }) => (
@@ -95,7 +102,7 @@ const MegaMenu: React.FC<{ active: boolean, onMouseLeave: () => void }> = ({ act
               <ul className="space-y-4">
                 {megamenuData.lineas.map(linea => (
                   <li key={linea}>
-                    <Link to="/productos" className="text-base text-[#594A42] hover:text-[#2B341F] transition-all truncate block font-clofie font-light">{linea}</Link>
+                    <Link to={`/productos?linea=${encodeURIComponent(linea)}`} onClick={onMouseLeave} className="text-base text-[#594A42] hover:text-[#2B341F] transition-all truncate block font-clofie font-light">{linea}</Link>
                   </li>
                 ))}
               </ul>
@@ -109,13 +116,15 @@ const MegaMenu: React.FC<{ active: boolean, onMouseLeave: () => void }> = ({ act
                   const isHovered = activeAmbiente.name === amb.name;
                   return (
                     <li key={amb.name}>
-                      <button
+                      <Link
+                        to={`/productos?ambiente=${encodeURIComponent(amb.name)}`}
+                        onClick={onMouseLeave}
                         onMouseEnter={() => setActiveAmbiente(amb)}
                         className={`w-full flex items-center px-4 py-3 rounded-lg transition-all font-clofie font-light text-base ${isHovered ? 'bg-[#FDFBF7] shadow-sm text-[#2B341F]' : 'text-[#8C7A6B] hover:bg-[#E2D8CC]'}`}
                       >
                         <amb.icon size={18} className={`mr-3 ${isHovered ? 'opacity-100' : 'opacity-70'}`} />
                         {amb.name}
-                      </button>
+                      </Link>
                     </li>
                   );
                 })}
@@ -129,7 +138,7 @@ const MegaMenu: React.FC<{ active: boolean, onMouseLeave: () => void }> = ({ act
               <ul className="space-y-4">
                 {activeAmbiente.lineas.map(linea => (
                   <li key={linea}>
-                    <Link to="/productos" className="text-base font-clofie font-light text-[#594A42] hover:text-[#2B341F] hover:font-medium transition-all block">{linea}</Link>
+                    <Link to={`/productos?linea=${encodeURIComponent(linea)}&ambiente=${encodeURIComponent(activeAmbiente.name)}`} onClick={onMouseLeave} className="text-base font-clofie font-light text-[#594A42] hover:text-[#2B341F] hover:font-medium transition-all block">{linea}</Link>
                   </li>
                 ))}
               </ul>
@@ -142,33 +151,34 @@ const MegaMenu: React.FC<{ active: boolean, onMouseLeave: () => void }> = ({ act
             <div className="w-[300px] pl-6 flex flex-col justify-start">
               <h3 className="text-[14px] font-outersans font-thin text-[#8C7A6B] uppercase mb-6 tracking-[0.4em]">Contacto</h3>
               
-              <div className="space-y-2 mb-6">
-                <button className="w-full flex items-center justify-between px-5 py-4 bg-[#594A42] text-white rounded-xl hover:bg-[#403429] transition-colors group shadow-md shadow-[#ECE2D2]/50">
-                  <div className="text-left">
-                    <div className="text-[10px] tracking-widest uppercase font-bold text-white/70 mb-0.5">Asistente Gaci</div>
-                    <div className="text-[13px] font-light text-white/90">Charla con nosotros</div>
-                  </div>
-                  <Bot size={24} className="opacity-90 group-hover:scale-110 transition-transform" />
-                </button>
-                <button className="w-full flex items-center px-5 py-3 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F]">
-                  <MessageCircle size={18} className="mr-4 opacity-70" />
-                  <span className="text-[13px] font-medium">WhatsApp</span>
-                </button>
-                <button className="w-full flex items-center px-5 py-3 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F]">
-                  <Users size={18} className="mr-4 opacity-70" />
-                  <span className="text-[13px] font-medium">Trabajá con nosotros</span>
-                </button>
-              </div>
-
-              {/* PROMO CARD (Nueva Coleccion Kyoto) */}
-              <div className="relative h-[220px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer border border-[#D9CDB8]">
-                {/* Fallback image that gives the vibe */}
-                <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?q=80&w=600&auto=format&fit=crop" alt="Esencia Kyoto 2024" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-75 mix-blend-multiply" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2B341F]/90 via-[#2B341F]/40 to-transparent"></div>
-                <div className="absolute bottom-5 left-5 right-5">
-                  <div className="text-[14px] font-outersans font-thin uppercase tracking-[0.4em] text-[#ECE2D2] mb-1.5 opacity-90">Nueva Colección</div>
-                  <div className="text-[#ECE2D2] text-2xl font-godber font-normal uppercase tracking-[0.05em] leading-tight">Esencia Kyoto 2024</div>
-                </div>
+              <div className="space-y-1">
+                <Link to="/contacto" onClick={onMouseLeave} className="w-full flex items-center px-4 py-2.5 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F] group">
+                  <Mail size={16} className="mr-3 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[14px] font-clofie font-light">Contacto</span>
+                </Link>
+                <Link to="/trabaja-con-nosotros" onClick={onMouseLeave} className="w-full flex items-center px-4 py-2.5 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F] group">
+                  <Users size={16} className="mr-3 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[14px] font-clofie font-light">Trabajá con nosotros</span>
+                </Link>
+                <Link to="/preguntas-frecuentes" onClick={onMouseLeave} className="w-full flex items-center px-4 py-2.5 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F] group">
+                  <HelpCircle size={16} className="mr-3 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[14px] font-clofie font-light">Preguntas frecuentes</span>
+                </Link>
+                <Link to="/reclamos" onClick={onMouseLeave} className="w-full flex items-center px-4 py-2.5 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F] group">
+                  <FileText size={16} className="mr-3 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[14px] font-clofie font-light">Formulario de reclamos</span>
+                </Link>
+                
+                <div className="my-3 border-t border-[#EAE3D9]"></div>
+                
+                <a href="tel:+543584622342" className="w-full flex items-center px-4 py-2.5 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F] group">
+                  <Phone size={16} className="mr-3 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[14px] font-clofie font-light">Teléfono (358) 4622342</span>
+                </a>
+                <a href="https://wa.me/5493584329079" target="_blank" rel="noopener noreferrer" className="w-full flex items-center px-4 py-2.5 hover:bg-[#E2D8CC] rounded-xl transition-colors text-[#594A42] hover:text-[#2B341F] group">
+                  <MessageCircle size={16} className="mr-3 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[14px] font-clofie font-light">Whatsapp 3584 32-9079</span>
+                </a>
               </div>
             </div>
 
@@ -189,8 +199,11 @@ const Navbar: React.FC<NavbarProps> = ({ onLogoClick, onProductClick }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileProductosOpen, setIsMobileProductosOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Product[]>([]);
+  const [totalSearchResults, setTotalSearchResults] = useState(0);
+  const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -198,24 +211,47 @@ const Navbar: React.FC<NavbarProps> = ({ onLogoClick, onProductClick }) => {
 
     if (value.length > 2) {
       const lowerValue = value.toLowerCase();
+      // Función para quitar tildes/acentos
+      const removeAccents = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      
+      const searchTerms = removeAccents(lowerValue).split(' ').filter(term => term.length > 0);
 
-      // Sugerencia Inteligente: 
-      if (lowerValue.includes('mesa') && lowerValue.includes('living')) {
-        const oslo = Object.values(productData).flat().find(p => p.title.includes('OSLO'));
-        if (oslo) {
-          setSuggestions([oslo]);
-          return;
-        }
-      }
+      // Búsqueda inteligente a través de toda la base de datos de productos
+      const allFiltered = db.products.filter(p => {
+        // Combinamos los campos relevantes y le quitamos tildes
+        const rawText = `${p.Nombre_Comercial || ''} ${p.Linea || ''} ${p.Ambiente || ''} ${p.Descripcion_Corta || ''} ${p.Descripcion_Larga || ''}`.toLowerCase();
+        const searchableText = removeAccents(rawText);
+        
+        // El producto debe tener una coincidencia con TODOS los términos que escriba el usuario
+        return searchTerms.every(term => searchableText.includes(term));
+      });
+      
+      setTotalSearchResults(allFiltered.length);
+      
+      const limitedResults = allFiltered.slice(0, 6).map((p: any, index: number) => ({
+        id: index, // Usamos el índice como ID temporal ya que el SKU es string
+        title: p.Nombre_Comercial,
+        shortDescription: `${p.Linea} | ${p.Ambiente}`,
+        image: p.Fotos_Mueble ? p.Fotos_Mueble.split(';')[0].trim() : '/images/placeholder.png',
+        sku: p.SKU,
+        linea: p.Linea, // Importante para que el router sepa adónde dirigir el click
+        rating: 5,
+        longDescription: p.Descripcion_Larga || '',
+        assemblyTime: '',
+        difficulty: '',
+        assemblyTools: [],
+        mainImages: [],
+        thumbnails: [],
+        technicalImage: '',
+        specs: [],
+        inspirationImages: [],
+        suggestedProducts: []
+      } as Product));
 
-      // Búsqueda genérica
-      const filtered = Object.values(productData).flat().filter(p =>
-        p.title.toLowerCase().includes(lowerValue) ||
-        p.shortDescription.toLowerCase().includes(lowerValue)
-      ).slice(0, 3);
-      setSuggestions(filtered);
+      setSuggestions(limitedResults);
     } else {
       setSuggestions([]);
+      setTotalSearchResults(0);
     }
   };
 
@@ -306,24 +342,40 @@ const Navbar: React.FC<NavbarProps> = ({ onLogoClick, onProductClick }) => {
                         <div className="px-4 py-2 bg-[#FDFBF7] text-[10px] uppercase tracking-widest font-bold text-[#A69785] border-b border-[#EAE3D9]">
                           Sugerencias para vos
                         </div>
-                        {suggestions.map((product) => (
+                        <div className="max-h-[350px] overflow-y-auto">
+                          {suggestions.map((product) => (
+                            <button
+                              type="button"
+                              key={product.id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleSuggestionClick(product);
+                              }}
+                              className="flex items-center p-3 hover:bg-[#FDFBF7] group transition-colors text-left w-full border-b border-[#EAE3D9] last:border-0 cursor-pointer"
+                            >
+                              <img src={product.image} alt="" className="w-10 h-10 rounded-lg object-cover mr-3 border border-[#EAE3D9]" />
+                              <div>
+                                <p className="text-[12px] font-bold text-[#2B341F] group-hover:text-[#594A42] transition-colors">{product.title}</p>
+                                <p className="text-[10px] text-[#8C7A6B] line-clamp-1">{product.shortDescription}</p>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                        {totalSearchResults > 6 && (
                           <button
                             type="button"
-                            key={product.id}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleSuggestionClick(product);
+                            onClick={() => {
+                              navigate(`/productos?search=${encodeURIComponent(searchQuery)}`);
+                              setSearchQuery('');
+                              setSuggestions([]);
+                              setIsSearchExpanded(false);
                             }}
-                            className="flex items-center p-3 hover:bg-[#FDFBF7] group transition-colors text-left w-full border-b border-[#EAE3D9] last:border-0 cursor-pointer"
+                            className="w-full p-3 bg-[#FAF8F5] text-[11px] font-bold text-[#8C7A6B] hover:text-[#594A42] hover:bg-[#EAE3D9] transition-colors text-center border-t border-[#EAE3D9]"
                           >
-                            <img src={product.image} alt="" className="w-10 h-10 rounded-lg object-cover mr-3 border border-[#EAE3D9]" />
-                            <div>
-                              <p className="text-[12px] font-bold text-[#2B341F] group-hover:text-[#594A42] transition-colors">{product.title}</p>
-                              <p className="text-[10px] text-[#8C7A6B] line-clamp-1">{product.shortDescription}</p>
-                            </div>
+                            Ver los {totalSearchResults} resultados para "{searchQuery}"...
                           </button>
-                        ))}
+                        )}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -380,30 +432,117 @@ const Navbar: React.FC<NavbarProps> = ({ onLogoClick, onProductClick }) => {
             
             <div className="flex-1 overflow-y-auto p-8 flex flex-col space-y-6">
                <h2 className="text-[14px] font-outersans font-thin uppercase tracking-[0.4em] text-[#A69785] border-b border-[#EAE3D9] pb-3 mb-2">Menú Principal</h2>
-               {topNavItems.map(item => (
-                 <Link
-                   key={item}
-                   to={item === 'Productos' ? '/productos' : item === 'Nosotros' ? '/nosotros' : item === 'Novedades' ? '/novedades' : item === 'Contacto' ? '/contacto' : item === 'Aberturas' ? '/aberturas' : '#'}
-                   onClick={() => setIsMobileMenuOpen(false)}
-                   className="font-godber text-4xl text-[#2B341F] active:text-[#594A42] uppercase tracking-[0.05em]"
-                 >
-                   {item}
-                 </Link>
-               ))}
+               {topNavItems.map(item => {
+                 if (item === 'Productos') {
+                   return (
+                     <div key={item} className="flex flex-col">
+                       <button
+                         onClick={() => setIsMobileProductosOpen(!isMobileProductosOpen)}
+                         className="flex items-center justify-between font-godber text-2xl text-[#2B341F] active:text-[#594A42] uppercase tracking-[0.05em] text-left w-full"
+                       >
+                         {item}
+                         <ChevronDown size={24} className={`transition-transform duration-300 ${isMobileProductosOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+                       </button>
+                       <AnimatePresence>
+                         {isMobileProductosOpen && (
+                           <motion.div
+                             initial={{ height: 0, opacity: 0 }}
+                             animate={{ height: 'auto', opacity: 1 }}
+                             exit={{ height: 0, opacity: 0 }}
+                             className="overflow-hidden flex flex-col gap-2 mt-4"
+                           >
+                             <div className="p-4 bg-white/50 rounded-xl border border-[#EAE3D9]/50">
+                               <h3 className="text-[10px] font-outersans font-thin uppercase tracking-[0.2em] text-[#A69785] mb-3">Filtrar por Ambiente</h3>
+                               <div className="grid grid-cols-2 gap-2 mb-6">
+                                 {megamenuData.ambientes.map((ambiente) => (
+                                   <Link
+                                     key={ambiente.name}
+                                     to={`/productos?ambiente=${encodeURIComponent(ambiente.name)}`}
+                                     onClick={() => setIsMobileMenuOpen(false)}
+                                     className="flex flex-col items-center justify-center p-3 bg-white border border-[#EAE3D9] rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                   >
+                                     <div className="text-[#8C7A6B] mb-2 transform scale-75">
+                                       <ambiente.icon size={24} />
+                                     </div>
+                                     <span className="text-[10px] font-clofie font-bold uppercase tracking-widest text-[#594A42] text-center leading-tight">
+                                       {ambiente.name}
+                                     </span>
+                                   </Link>
+                                 ))}
+                               </div>
 
-               <div className="mt-8 pt-8 border-t border-[#EAE3D9]">
-                 <h2 className="text-[14px] font-outersans font-thin uppercase tracking-[0.4em] text-[#A69785] pb-4">Contacto Directo</h2>
-                 <button className="w-full flex items-center justify-between px-5 py-4 bg-[#594A42] text-white rounded-xl mb-3">
-                   <div className="text-left">
-                     <div className="text-[10px] tracking-widest uppercase font-bold text-white/70 mb-0.5">Asistente Gaci</div>
-                     <div className="text-[13px] font-light">Charla con nosotros</div>
-                   </div>
-                   <Bot size={24} className="opacity-90" />
-                 </button>
-                 <button className="w-full flex items-center px-5 py-3 bg-[#EAE3D9] rounded-xl text-[#594A42] font-medium">
-                   <MessageCircle size={18} className="mr-3 opacity-70" />
-                   WhatsApp
-                 </button>
+                               <h3 className="text-[10px] font-outersans font-thin uppercase tracking-[0.2em] text-[#A69785] mb-3">Filtrar por Línea</h3>
+                               <div className="flex flex-wrap gap-2 mb-6">
+                                 {megamenuData.lineas.map(linea => (
+                                   <Link
+                                     key={linea}
+                                     to={`/productos?linea=${encodeURIComponent(linea)}`}
+                                     onClick={() => setIsMobileMenuOpen(false)}
+                                     className="px-4 py-2 bg-white border border-[#EAE3D9] shadow-sm rounded-full text-[12px] uppercase tracking-widest font-clofie text-[#594A42]"
+                                   >
+                                     {linea}
+                                   </Link>
+                                 ))}
+                               </div>
+
+                               <Link
+                                 to="/productos"
+                                 onClick={() => setIsMobileMenuOpen(false)}
+                                 className="flex items-center justify-center w-full py-3.5 bg-[#2B341F] text-[#ECE2D2] rounded-lg text-[12px] uppercase tracking-widest font-clofie font-bold italic shadow-md"
+                               >
+                                 Ver Catálogo Completo
+                               </Link>
+                             </div>
+                           </motion.div>
+                         )}
+                       </AnimatePresence>
+                     </div>
+                   );
+                 }
+                 
+                 return (
+                   <Link
+                     key={item}
+                     to={item === 'Nosotros' ? '/nosotros' : item === 'Novedades' ? '/novedades' : item === 'Contacto' ? '/contacto' : item === 'Aberturas' ? '/aberturas' : '#'}
+                     onClick={() => setIsMobileMenuOpen(false)}
+                     className="font-godber text-2xl text-[#2B341F] active:text-[#594A42] uppercase tracking-[0.05em]"
+                   >
+                     {item}
+                   </Link>
+                 );
+               })}
+
+               <div className="mt-8 pt-6 border-t border-[#EAE3D9]">
+                 <div className="flex flex-col">
+                   <Link to="/contacto" className="flex items-center justify-between py-4 border-b border-[#EAE3D9] text-[#2B341F]" onClick={() => setIsMobileMenuOpen(false)}>
+                     <div className="flex items-center">
+                       <Briefcase size={20} className="mr-4 text-[#8C7A6B]" strokeWidth={1.5} />
+                       <span className="text-base font-clofie font-light">Compra mayorista</span>
+                     </div>
+                     <ChevronRight size={20} className="text-[#8C7A6B]" strokeWidth={1.5} />
+                   </Link>
+                   
+                   <a href="tel:3584622342" className="flex items-center justify-between py-4 border-b border-[#EAE3D9] text-[#2B341F]">
+                     <div className="flex items-center">
+                       <Phone size={20} className="mr-4 text-[#8C7A6B]" strokeWidth={1.5} />
+                       <span className="text-base font-clofie font-light">Llamanos</span>
+                     </div>
+                     <ChevronRight size={20} className="text-[#8C7A6B]" strokeWidth={1.5} />
+                   </a>
+
+                   <a href="https://wa.me/5493584329079" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between py-4 text-[#2B341F]">
+                     <div className="flex items-center">
+                       <MessageCircle size={20} className="mr-4 text-[#8C7A6B]" strokeWidth={1.5} />
+                       <span className="text-base font-clofie font-light">WhatsApp</span>
+                     </div>
+                     <ChevronRight size={20} className="text-[#8C7A6B]" strokeWidth={1.5} />
+                   </a>
+                 </div>
+
+                 <div className="mt-6 pt-6 border-t border-[#EAE3D9]">
+                   <h4 className="text-[11px] font-clofie font-bold uppercase tracking-widest text-[#2B341F] mb-1">ATENCIÓN AL CLIENTE</h4>
+                   <p className="text-[13px] font-clofie font-light text-[#594A42]">Lunes a viernes de 7 a 17 hs.</p>
+                 </div>
                </div>
             </div>
           </motion.div>

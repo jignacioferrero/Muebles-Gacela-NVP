@@ -189,6 +189,69 @@ const Contacto: React.FC = () => {
           </div>
         </div>
 
+        {/* Formulario de Contacto */}
+        <div className="mt-24 max-w-4xl mx-auto bg-white p-8 md:p-14 rounded-[2.5rem] border border-[#D9CDB8]/40 shadow-xl relative overflow-hidden">
+          {/* Fondo sutil */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-support/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          
+          <div className="text-center mb-12 relative z-10">
+            <h2 className="text-[14px] font-outersans font-thin uppercase tracking-[0.4em] text-brand-support mb-4">Atención Personalizada</h2>
+            <h3 className="text-4xl md:text-5xl font-godber font-normal uppercase tracking-[0.05em] text-brand-primary">Ponete en Contacto</h3>
+            <p className="mt-4 text-base text-[#8C7A6B] font-clofie font-light max-w-lg mx-auto">Dejanos tus datos y tu consulta. Nuestro equipo comercial se comunicará a la brevedad.</p>
+          </div>
+
+          <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {/* Nombre */}
+              <div>
+                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="nombre">Nombre <span className="text-brand-support">*</span></label>
+                <input type="text" id="nombre" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Tu nombre y apellido" />
+              </div>
+              
+              {/* Teléfono */}
+              <div>
+                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="telefono">Número de Teléfono</label>
+                <div className="flex">
+                  <span className="inline-flex items-center justify-center px-4 bg-[#EAE3D9] border border-r-0 border-[#EAE3D9] rounded-l-xl text-[#594A42] font-clofie font-bold text-sm">
+                    +54
+                  </span>
+                  <input type="tel" id="telefono" className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-r-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Cod. área + número" />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="email">Email <span className="text-brand-support">*</span></label>
+                <input type="email" id="email" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="tu@email.com" />
+              </div>
+
+              {/* Tu empresa */}
+              <div>
+                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="empresa">Tu empresa</label>
+                <input type="text" id="empresa" className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Nombre de tu empresa (opcional)" />
+              </div>
+            </div>
+
+            {/* Asunto */}
+            <div>
+              <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="asunto">Asunto <span className="text-brand-support">*</span></label>
+              <input type="text" id="asunto" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="¿Sobre qué nos escribís?" />
+            </div>
+
+            {/* Consulta */}
+            <div>
+              <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="consulta">Consulta <span className="text-brand-support">*</span></label>
+              <textarea id="consulta" required rows={5} className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all resize-none" placeholder="Escribí tu mensaje detallado acá..."></textarea>
+            </div>
+
+            <div className="pt-6 text-center">
+              <button type="submit" className="inline-flex items-center justify-center px-12 py-4 bg-brand-primary text-[#ECE2D2] rounded-xl text-[14px] uppercase tracking-[0.2em] hover:bg-brand-support transition-all font-clofie font-bold italic shadow-md hover:shadow-xl hover:-translate-y-1 w-full md:w-auto">
+                Enviar Mensaje
+              </button>
+            </div>
+          </form>
+        </div>
+
       </div>
     </motion.div>
   );

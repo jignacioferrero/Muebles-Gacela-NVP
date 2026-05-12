@@ -1,25 +1,104 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import db from '../data/productos.json';
 
 const Catalog: React.FC = () => {
   const [selectedLinea, setSelectedLinea] = useState<string>('');
   const [selectedAmbiente, setSelectedAmbiente] = useState<string>('');
+  const [selectedSearch, setSelectedSearch] = useState<string>('');
+  const location = useLocation();
 
-  // Extract unique lines and ambients for the filter dropdowns
-  // Exact lines and environments as requested by the user
-  const lineas = ["Clásica", "Kyoto", "Curvalba", "Lumo", "Nordik", "Infantil", "Gamer"];
-  const ambientes = ["Living", "Comedor", "Dormitorio", "Cocina", "Oficina"];
+  const ALL_LINEAS = ["Clásica", "Kyoto", "Curvalba", "Lumo", "Nordik", "Infantil", "Gamer"];
+  const ALL_AMBIENTES = ["Living", "Comedor", "Dormitorio", "Cocina", "Oficina"];
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const lineaParam = params.get('linea');
+    const ambienteParam = params.get('ambiente');
+    
+    // Find the original case matched value from arrays or default to empty
+    // so the selects can correctly reflect the active filter
+    if (lineaParam) {
+      const matchedLinea = ALL_LINEAS.find(l => l.toLowerCase() === lineaParam.toLowerCase());
+      setSelectedLinea(matchedLinea || '');
+    } else {
+      setSelectedLinea('');
+    }
+    
+    if (ambienteParam) {
+      const matchedAmbiente = ALL_AMBIENTES.find(a => a.toLowerCase() === ambienteParam.toLowerCase());
+      setSelectedAmbiente(matchedAmbiente || '');
+    } else {
+      setSelectedAmbiente('');
+    }
+    
+    const searchParam = params.get('search');
+    setSelectedSearch(searchParam || '');
+  }, [location.search]);
+
+  const prodsWithSearch = useMemo(() => {
+    let prods = db.products;
+    if (selectedSearch) {
+      const removeAccents = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const searchTerms = removeAccents(selectedSearch.toLowerCase()).split(' ').filter(term => term.length > 0);
+      prods = prods.filter(p => {
+        const rawText = `${p.Nombre_Comercial || ''} ${p.Linea || ''} ${p.Ambiente || ''} ${p.Descripcion_Corta || ''} ${p.Descripcion_Larga || ''}`.toLowerCase();
+        const searchableText = removeAccents(rawText);
+        return searchTerms.every(term => searchableText.includes(term));
+      });
+    }
+    return prods;
+  }, [selectedSearch]);
+
+  const availableLineas = useMemo(() => {
+    let prods = prodsWithSearch;
+    if (selectedAmbiente) {
+      prods = prods.filter(p => p.Ambiente === selectedAmbiente);
+    }
+    const validLines = new Set(prods.map(p => p.Linea));
+    return ALL_LINEAS.filter(l => validLines.has(l));
+  }, [selectedAmbiente, prodsWithSearch]);
+
+  const availableAmbientes = useMemo(() => {
+    let prods = prodsWithSearch;
+    if (selectedLinea) {
+      prods = prods.filter(p => p.Linea === selectedLinea);
+    }
+    const validAmbs = new Set(prods.map(p => p.Ambiente));
+    return ALL_AMBIENTES.filter(a => validAmbs.has(a));
+  }, [selectedLinea, prodsWithSearch]);
+
+  const handleLineaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLinea = e.target.value;
+    setSelectedLinea(newLinea);
+    if (newLinea && selectedAmbiente) {
+      const validAmbs = new Set(prodsWithSearch.filter(p => p.Linea === newLinea).map(p => p.Ambiente));
+      if (!validAmbs.has(selectedAmbiente)) {
+        setSelectedAmbiente('');
+      }
+    }
+  };
+
+  const handleAmbienteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newAmbiente = e.target.value;
+    setSelectedAmbiente(newAmbiente);
+    if (newAmbiente && selectedLinea) {
+      const validLines = new Set(prodsWithSearch.filter(p => p.Ambiente === newAmbiente).map(p => p.Linea));
+      if (!validLines.has(selectedLinea)) {
+        setSelectedLinea('');
+      }
+    }
+  };
 
   const filteredProducts = useMemo(() => {
-    return db.products.filter(p => {
+    return prodsWithSearch.filter(p => {
       const matchLinea = selectedLinea ? p.Linea === selectedLinea : true;
       const matchAmbiente = selectedAmbiente ? p.Ambiente === selectedAmbiente : true;
       return matchLinea && matchAmbiente;
     });
-  }, [selectedLinea, selectedAmbiente]);
+  }, [selectedLinea, selectedAmbiente, prodsWithSearch]);
 
   return (
     <div className="bg-brand-bg min-h-screen">
@@ -28,7 +107,7 @@ const Catalog: React.FC = () => {
         <div className="absolute inset-0 z-0">
           <img 
             src="/images/hero-home.png" 
-            alt="Catálogo Gacela" 
+            alt="Portfolio Gacela" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-brand-primary/40"></div>
@@ -39,7 +118,7 @@ const Catalog: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl md:text-7xl lg:text-8xl font-godber font-normal uppercase tracking-[0.05em] text-white mb-6 drop-shadow-lg"
           >
-            Nuestro Catálogo
+            Nuestro Portfolio
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -55,7 +134,7 @@ const Catalog: React.FC = () => {
       <div className="container mx-auto px-6 lg:px-12 py-24">
         <div className="text-center mb-20 max-w-7xl mx-auto">
             <h2 className="text-5xl md:text-7xl font-godber font-normal text-brand-primary tracking-wide mb-12">
-                Catálogo
+                Portfolio
             </h2>
 
             {/* FILTERS SECTION - DOS DESPLEGABLES */}
@@ -66,10 +145,10 @@ const Catalog: React.FC = () => {
                         <select 
                             className="w-full bg-[#FAF8F5] border border-[#EAE3D9] text-[#594A42] font-clofie font-light text-[15px] px-6 py-4 rounded-full focus:outline-none focus:ring-1 focus:ring-brand-support appearance-none cursor-pointer transition-all hover:bg-white shadow-sm"
                             value={selectedLinea}
-                            onChange={(e) => setSelectedLinea(e.target.value)}
+                            onChange={handleLineaChange}
                         >
                             <option value="">Todas las líneas</option>
-                            {lineas.map(linea => (
+                            {availableLineas.map(linea => (
                                 <option key={linea as string} value={linea as string}>{linea as string}</option>
                             ))}
                         </select>
@@ -85,10 +164,10 @@ const Catalog: React.FC = () => {
                         <select 
                             className="w-full bg-[#FAF8F5] border border-[#EAE3D9] text-[#594A42] font-clofie font-light text-[15px] px-6 py-4 rounded-full focus:outline-none focus:ring-1 focus:ring-brand-support appearance-none cursor-pointer transition-all hover:bg-white shadow-sm"
                             value={selectedAmbiente}
-                            onChange={(e) => setSelectedAmbiente(e.target.value)}
+                            onChange={handleAmbienteChange}
                         >
                             <option value="">Todos los ambientes</option>
-                            {ambientes.map(ambiente => (
+                            {availableAmbientes.map(ambiente => (
                                 <option key={ambiente as string} value={ambiente as string}>{ambiente as string}</option>
                             ))}
                         </select>
@@ -108,14 +187,14 @@ const Catalog: React.FC = () => {
               onClick={() => { setSelectedLinea(''); setSelectedAmbiente(''); }}
               className="mt-6 text-[14px] font-clofie font-bold italic tracking-widest uppercase border-b border-brand-support hover:opacity-70"
             >
-              Ver todo el catálogo
+              Ver todo el portfolio
             </button>
           </div>
         ) : (
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-10 gap-y-16 max-w-7xl mx-auto">
+          <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-10 md:gap-y-16 max-w-7xl mx-auto">
             <AnimatePresence>
                 {filteredProducts.map((product, idx) => {
-                const fotos = product.URLs_Fotos ? product.URLs_Fotos.split(';') : [];
+                const fotos = product.Fotos_Mueble ? product.Fotos_Mueble.split(/[;,]\s*/).filter(Boolean) : [];
                 const mainPhoto = fotos.length > 0 ? fotos[0] : 'https://placehold.co/600x600/f2f2f2/1a1a1a?text=Foto+Pendiente';
                 
                 return (
@@ -126,29 +205,35 @@ const Catalog: React.FC = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.3 }}
-                        className="group flex flex-col items-center cursor-pointer"
+                        className="group flex flex-col cursor-pointer"
                     >
-                    <Link to={`/productos/${product.slug}`} className="block w-full text-center">
-                        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 flex items-center justify-center bg-transparent">
+                    <Link to={`/${String(product.Linea || 'producto').toLowerCase().replace(/\s+/g, '-')}/${product.SKU}`} className="block w-full">
+                        <div className="relative aspect-[4/5] rounded-xl overflow-hidden mb-6 bg-white shadow-sm group-hover:shadow-md transition-all duration-500">
                             <img 
                                 src={mainPhoto} 
                                 alt={product.Nombre_Comercial as string} 
-                                className="w-[85%] h-[85%] object-contain group-hover:scale-105 transition-transform duration-500"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x600/f2f2f2/1a1a1a?text=Foto+Invalida'; }}
                             />
+                            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                <span className="text-[10px] uppercase tracking-widest font-clofie font-bold italic text-brand-primary">Ver Producto</span>
+                            </div>
                         </div>
-                        <h3 className="text-lg font-godber uppercase text-brand-primary tracking-wider group-hover:text-brand-support transition-colors">{product.Nombre_Comercial as string}</h3>
                         
-                        <div className="flex gap-2 justify-center mt-3 mb-3">
-                            <div className="w-3 h-3 rounded-full bg-[#8C7A6B]"></div>
-                            <div className="w-3 h-3 rounded-full bg-[#CFB59D]"></div>
-                            <div className="w-3 h-3 rounded-full bg-[#594A42]"></div>
+                        <div className="space-y-1">
+                            <h3 className="text-lg font-godber uppercase text-brand-primary tracking-wider group-hover:text-brand-support transition-colors leading-tight">
+                                {product.Nombre_Comercial as string}
+                            </h3>
+                            
+                            <div className="flex items-center justify-between mt-2">
+                                <p className="text-[11px] font-clofie font-normal tracking-[0.2em] uppercase text-brand-support/70">
+                                    {(product.Linea as string) || 'Gacela'}
+                                </p>
+                                {product.Precio && (
+                                    <p className="text-[14px] font-clofie font-bold italic text-brand-accent">${product.Precio}</p>
+                                )}
+                            </div>
                         </div>
-
-                        {product.Precio && (
-                            <p className="text-[13px] font-clofie font-light text-[#594A42]">${product.Precio}</p>
-                        )}
-                        <p className="text-[10px] font-clofie text-[#A69785] tracking-widest uppercase mt-1">{(product.Linea as string) || 'Gacela'}</p>
                     </Link>
                     </motion.div>
                 );

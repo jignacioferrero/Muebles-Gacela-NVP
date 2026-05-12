@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const categories = [
   {
@@ -66,17 +67,19 @@ const CategoryGrid: React.FC = () => {
               transition={{ delay: idx * 0.1 }}
               className="group cursor-pointer"
             >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl mb-4 bg-brand-bg">
-                <motion.img 
-                  src={cat.image} 
-                  alt={cat.title}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
-              </div>
-              <h4 className="text-[14px] tracking-widest uppercase text-brand-primary text-left transition-colors group-hover:text-brand-support font-clofie font-bold italic mt-4">
-                {cat.title}
-              </h4>
+              <Link to={`/productos?ambiente=${encodeURIComponent(cat.title)}`} onClick={() => window.scrollTo(0, 0)} className="block">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl mb-4 bg-brand-bg">
+                  <motion.img 
+                    src={cat.image} 
+                    alt={cat.title}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
+                </div>
+                <h4 className="text-[14px] tracking-widest uppercase text-brand-primary text-left transition-colors group-hover:text-brand-support font-clofie font-bold italic mt-4">
+                  {cat.title}
+                </h4>
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -90,16 +93,18 @@ const CategoryGrid: React.FC = () => {
           >
             {categories.map((cat) => (
               <div key={cat.title} className="min-w-[75%] sm:min-w-[50%]">
-                <div className="aspect-[3/4] overflow-hidden rounded-2xl mb-4 shadow-sm">
-                  <img 
-                    src={cat.image} 
-                    alt={cat.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h4 className="text-[14px] tracking-widest uppercase text-brand-primary font-clofie font-bold italic mt-4">
-                  {cat.title}
-                </h4>
+                <Link to={`/productos?ambiente=${encodeURIComponent(cat.title)}`} onClick={() => window.scrollTo(0, 0)} className="block group">
+                  <div className="aspect-[3/4] overflow-hidden rounded-2xl mb-4 shadow-sm">
+                    <img 
+                      src={cat.image} 
+                      alt={cat.title}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  </div>
+                  <h4 className="text-[14px] tracking-widest uppercase text-brand-primary font-clofie font-bold italic mt-4 group-hover:text-brand-support transition-colors">
+                    {cat.title}
+                  </h4>
+                </Link>
               </div>
             ))}
           </motion.div>

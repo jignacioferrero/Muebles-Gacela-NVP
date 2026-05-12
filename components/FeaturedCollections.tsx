@@ -33,7 +33,7 @@ const FeaturedCollections: React.FC = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-brand-primary mb-4 font-serif">Colecciones Destacadas</h2>
             <p className="text-gray-600 text-lg">Descubre nuestra selección de piezas curadas para cada espacio de tu vida.</p>
           </div>
-          <button className="text-brand-primary font-bold border-b-2 border-brand-support pb-1 hover:text-opacity-70 transition-all">Ver todo el catálogo</button>
+          <button className="text-brand-primary font-bold border-b-2 border-brand-support pb-1 hover:text-opacity-70 transition-all">Ver todo el portfolio</button>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

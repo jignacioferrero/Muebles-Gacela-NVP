@@ -16,7 +16,7 @@ const TopBar: React.FC = () => {
             className="flex items-center text-[10px] md:text-[11px] font-medium tracking-wider hover:text-white transition-colors duration-300 group"
           >
             <User size={14} className="mr-2 opacity-60 group-hover:opacity-100 transition-opacity stroke-[1.5px]" />
-            <span className="uppercase">Login</span>
+            <span className="uppercase">Venta Mayorista</span>
           </a>
         </div>
       </div>

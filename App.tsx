@@ -13,6 +13,7 @@ import ScrollToTop from './components/ScrollToTop';
 import Nosotros from './components/Nosotros';
 import Novedades from './components/Novedades';
 import SinglePost from './components/SinglePost';
+import AdminNewsDraft from './components/AdminNewsDraft';
 import { Product } from './types/product';
 import GaciBot from './components/GaciBot';
 import TermsAndConditions from './components/TermsAndConditions';
@@ -23,6 +24,7 @@ import ClaimsForm from './components/ClaimsForm';
 import WorkWithUs from './components/WorkWithUs';
 import Contacto from './components/Contacto';
 import Aberturas from './components/Aberturas';
+import Prueba from './components/Prueba';
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -33,8 +35,13 @@ const App: React.FC = () => {
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
-    // Temporal route using product ID or a mock slug
-    navigate(`/productos/${product.id}`);
+    
+    // Attempt to extract Linea and SKU. Support both Product interface and the raw JSON fields.
+    const lineaRaw = (product as any).linea || (product as any).Linea || 'producto';
+    const lineaSlug = typeof lineaRaw === 'string' ? lineaRaw.toLowerCase().replace(/\s+/g, '-') : 'producto';
+    const sku = product.sku || product.id;
+    
+    navigate(`/${lineaSlug}/${sku}`);
   };
 
   const handleLogoClick = () => {
@@ -97,9 +104,9 @@ const App: React.FC = () => {
               path="/productos" 
               element={<Catalog />} 
             />
-            {/* Phase 3: Products Route fetching from JSON via slug */}
+            {/* Phase 3: Products Route using /:linea/:sku */}
             <Route 
-              path="/productos/:slug" 
+              path="/:linea/:sku" 
               element={
                 <ProductDetail 
                   product={selectedProduct} // Pass it if coming from home, ProductDetail will fallback to JSON if missing
@@ -164,13 +171,21 @@ const App: React.FC = () => {
               path="/aberturas" 
               element={<Aberturas />} 
             />
+            <Route 
+              path="/admin-novedades" 
+              element={<AdminNewsDraft />} 
+            />
+            <Route 
+              path="/prueba" 
+              element={<Prueba />} 
+            />
           </Routes>
         </AnimatePresence>
       </main>
       <Footer />
 
       {/* GaciBot Persistente */}
-      <GaciBot />
+      {/* <GaciBot /> */}
     </div>
   );
 };

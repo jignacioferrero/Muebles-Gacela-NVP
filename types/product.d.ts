@@ -19,4 +19,6 @@ export interface Product {
   inspirationImages: string[];
   suggestedProducts: Pick<Product, 'id' | 'title' | 'rating' | 'image'>[]; // Productos sugeridos, simplificados
   youtubeVideo?: string; // Nuevo campo: URL del video de YouTube
+  manualPdf?: string;    // Mapeado al campo Manual_PDF del CSV
+  assemblyUrl?: string;  // Mapeado al campo Instructivo_Armado del CSV
 }

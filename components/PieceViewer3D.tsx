@@ -4,6 +4,8 @@ import { OrbitControls, Stage, PerspectiveCamera, Environment, Html, Line, useGL
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Box, MousePointer2, Ruler } from 'lucide-react';
 import * as THREE from 'three';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { useLoader } from '@react-three/fiber';
 
 interface PieceViewer3DProps {
     isOpen: boolean;
@@ -97,9 +99,16 @@ const MaderaPieza: React.FC<{ dimensions: string, finishes?: string[] }> = ({ di
 };
 
 const PieceModel: React.FC<{ url: string }> = ({ url }) => {
+    const isObj = url.toLowerCase().endsWith('.obj');
+    
+    if (isObj) {
+        const obj = useLoader(OBJLoader, url);
+        return <primitive object={obj} scale={10} />;
+    }
+    
     const gltf = useGLTF(url);
     const scene = Array.isArray(gltf) ? gltf[0].scene : gltf.scene;
-    return <primitive object={scene} />;
+    return <primitive object={scene} scale={10} />;
 };
 
 const PieceViewer3D: React.FC<PieceViewer3DProps> = ({ isOpen, onClose, pieceName, dimensions, modelUrl, finishes }) => {
@@ -153,15 +162,15 @@ const PieceViewer3D: React.FC<PieceViewer3DProps> = ({ isOpen, onClose, pieceNam
                                         </div>
                                     </Html>
                                 }>
-                                    <PerspectiveCamera makeDefault position={[8, 8, 8]} fov={40} />
+                                    <PerspectiveCamera makeDefault fov={35} />
                                     <OrbitControls
                                         makeDefault
-                                        minDistance={3}
-                                        maxDistance={25}
+                                        minDistance={1}
+                                        maxDistance={15}
                                         enableDamping={true}
                                     />
 
-                                    <Stage intensity={0.6} environment="city" adjustCamera={false}>
+                                    <Stage intensity={0.8} environment="city" adjustCamera={true}>
                                         {modelUrl ? (
                                             <PieceModel url={modelUrl} />
                                         ) : (

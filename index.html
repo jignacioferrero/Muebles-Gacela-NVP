@@ -11,11 +11,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
       @font-face {
         font-family: 'Godber';
         src: url('/fonts/Godber-Regular.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
+      }
+      .font-godber {
+        letter-spacing: 0.05em;
       }
       @font-face {
         font-family: 'OuterSans';
@@ -24,14 +32,20 @@
         font-style: normal;
       }
       @font-face {
+        font-family: 'OuterSans';
+        src: url('/fonts/OuterSans-Bold.otf') format('opentype');
+        font-weight: bold;
+        font-style: normal;
+      }
+      @font-face {
         font-family: 'Clofie';
-        src: url('/fonts/Clofie-Light.ttf') format('truetype');
+        src: url('/fonts/Clofie-Light.otf') format('opentype');
         font-weight: normal;
         font-style: normal;
       }
       @font-face {
         font-family: 'Clofie';
-        src: url('/fonts/Clofie-BoldItalic.ttf') format('truetype');
+        src: url('/fonts/Clofie-BoldItalic.otf') format('opentype');
         font-weight: bold;
         font-style: italic;
       }

@@ -24,66 +24,81 @@ function generateSlug(name) {
 
 try {
   const fileContent = fs.readFileSync(csvPath, 'utf-8');
-  // Split by newline
-  const lines = fileContent.split(/\r?\n/).filter(line => line.trim() !== '');
   
-  if (lines.length > 0) {
-    // We try to detect the delimiter (can be , or ;)
-    const firstLine = lines[0];
-    const delimiter = firstLine.includes(';') ? ';' : ',';
-    
-    // Naive CSV parsing holding quotes might be needed if user uses quotes
-    // But typically Excel exports with ; don't use quotes unless necessary.
-    const headers = lines[0].split(delimiter).map(h => h.trim());
-    
+  // Robust CSV parser that handles newlines and delimiters inside quotes
+  const rows = [];
+  let currentRow = [];
+  let currentField = '';
+  let inQuotes = false;
+  
+  // Detect delimiter
+  const firstLineEnd = fileContent.indexOf('\n');
+  const firstLine = firstLineEnd !== -1 ? fileContent.substring(0, firstLineEnd) : fileContent;
+  const delimiter = firstLine.includes(';') ? ';' : ',';
+
+  for (let i = 0; i < fileContent.length; i++) {
+    const char = fileContent[i];
+    const nextChar = fileContent[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Handle escaped quotes ("")
+        currentField += '"';
+        i++;
+      } else {
+        // Toggle quote state
+        inQuotes = !inQuotes;
+      }
+    } else if (char === delimiter && !inQuotes) {
+      currentRow.push(currentField.trim());
+      currentField = '';
+    } else if ((char === '\r' || char === '\n') && !inQuotes) {
+      if (currentField !== '' || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        rows.push(currentRow);
+        currentField = '';
+        currentRow = [];
+      }
+      // Skip \n if we just processed \r
+      if (char === '\r' && nextChar === '\n') i++;
+    } else {
+      currentField += char;
+    }
+  }
+  // Push last field/row
+  if (currentField !== '' || currentRow.length > 0) {
+    currentRow.push(currentField.trim());
+    rows.push(currentRow);
+  }
+
+  if (rows.length > 0) {
+    const headers = rows[0];
     const products = [];
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        
-        // Custom parser to handle delimiters inside quotes
-        const values = [];
-        let inQuotes = false;
-        let currentValue = '';
-        
-        for (let charIndex = 0; charIndex < line.length; charIndex++) {
-            const char = line[charIndex];
-            
-            if (char === '"') {
-                inQuotes = !inQuotes; // Toggle quotes
-            } else if (char === delimiter && !inQuotes) {
-                // End of value
-                values.push(currentValue);
-                currentValue = '';
-            } else {
-                currentValue += char;
-            }
-        }
-        values.push(currentValue); // Add the last value
+    
+    for (let i = 1; i < rows.length; i++) {
+      const values = rows[i];
+      if (values.length < headers.length) continue;
+      
+      const obj = {};
+      headers.forEach((header, index) => {
+        obj[header] = values[index] || '';
+      });
 
-        if (values.length < headers.length) continue;
-        
-        const obj = {};
-        headers.forEach((header, index) => {
-            let val = values[index] ? values[index].trim() : '';
-            // If the inside value was actually \"hello\", the parser above didn't remove the outermost quotes if they existed 
-            // wait, in the logic above, if it's "hello", currentValue is hello. The quotes were just toggled.
-            // But wait, the quotes are skipped! 
-            // Actually, my parser above `currentValue += char` when NOT quote. So quotes are naturally dropped! 
-            // Let's ensure we don't drop internal quotes like "He said ""Hello""", but simpler is fine.
-            obj[header] = val;
-        });
+      // Use SKU as the unique reference/slug as requested
+      obj.slug = obj.SKU ? generateSlug(obj.SKU) : generateSlug(obj.Nombre_Comercial || 'producto');
 
-        // Add extra computed fields
-        const slugPrefix = obj['Nombre_Comercial'] ? generateSlug(obj['Nombre_Comercial']) : 'producto';
-        const cleanSku = obj['SKU'] ? generateSlug(obj['SKU']) : 'gen';
-        obj.slug = `${slugPrefix}-${cleanSku}`;
+      // Normalise logística field
+      if (!obj['Medidas_Logistica'] && (obj['Peso'] || obj['Embalaje'])) {
+        const parts = [obj['Peso'], obj['Embalaje'], obj['Cantidad_Paquetes']].filter(Boolean);
+        obj['Medidas_Logistica'] = parts.join(' · ');
+      }
 
-        products.push(obj);
+      products.push(obj);
     }
     
     fs.writeFileSync(outputPath, JSON.stringify({ products }, null, 2));
     console.log(`Catalog created successfully at ${outputPath} with ${products.length} products.`);
   }
 } catch (error) {
-  console.error("Error reading or processing CSV:", error.message);
+  console.error("Error reading or processing CSV:", error.stack);
 }

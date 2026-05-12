@@ -1,0 +1,27 @@
+Producto: Art 708-15 (Placard SERENA) | Color: Carvalho -> Falta: Manual PDF
+Producto: Art 710150 (Botinero ARCA) | Color: Unico/Default -> Falta: Foto Principal (Escena sin Abierto), Foto de Medidas
+Producto: Art 427330 (Mesa BRIS 120x80) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 427331 (Mesa RUNAR 160x80) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 428330 (Mesa SOLVIK 80x80) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 405270 (Bahiut TAGUS) | Color: Unico/Default -> Falta: Foto Principal (Escena sin Abierto), Foto de Medidas
+Producto: Art 716270 (Cómoda DANUBIO) | Color: Unico/Default -> Falta: Foto Principal (Escena sin Abierto)
+Producto: Art 732270 (Mesa de luz LIMAY) | Color: Unico/Default -> Falta: Foto de Medidas
+Producto: Art 331250 (Mesa de centro NARA) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 334250 (Escritorio NIKKO) | Color: Unico/Default -> Falta: Foto Principal (Escena sin Abierto), Foto de Medidas
+Producto: Art 446250 (Rack FUKUOKA) | Color: Unico/Default -> Falta: Foto Principal (Escena sin Abierto)
+Producto: Art 331300 (Mesa de centro LUMI) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 405300 (Bahiut FUSAKE) | Color: Carvalho -> Falta: Manual PDF
+Producto: Art 716300 (Cómoda ARNA) | Color: Carvalho -> Falta: Manual PDF
+Producto: Art 732300 (Mesa de luz FOSS) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art446300 (Rack DRAM) | Color: Carvalho -> Falta: Manual PDF
+Producto: Art 234094 (Escritorio HAMAR) | Color: Unico/Default -> Falta: Foto Principal (Escena sin Abierto), Foto de Medidas
+Producto: Art 331330 (Mesa de centro LYS) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 334093 (Escritorio CRUX) | Color: Unico/Default -> Falta: Foto de Medidas
+Producto: Art 334330 (Escritorio TRA) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 353330 (Repisa LINJE) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 372020 (Set de mesas oval LUND) | Color: Unico/Default -> Falta: Foto Principal (Escena sin Abierto), Foto de Medidas
+Producto: Art 372080 (Set de mesas crux ALDE) | Color: Unico/Default -> Falta: Foto de Medidas
+Producto: Art 446330 (Rack NORDEN) | Color: Natural -> Falta: Manual PDF
+Producto: Art 716330 (Cómoda EIRA) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 742334 (Placard KLAR) | Color: Unico/Default -> Falta: Manual PDF
+Producto: Art 742336 (Placard STRAND) | Color: Unico/Default -> Falta: Manual PDF

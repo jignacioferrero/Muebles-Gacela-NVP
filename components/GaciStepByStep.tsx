@@ -33,8 +33,8 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
   const [currentView, setCurrentView] = useState<GaciView>('welcome');
   const [userName, setUserName] = useState<string>(''); // Nuevo estado para el nombre del usuario
   const [checklistItems, setChecklistItems] = useState([
-    { id: 'A', label: 'Tapa', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', modelUrl: '/Modelos 3d/Prueba.glb' },
-    { id: 'B', label: 'Piso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', finishes: ['roble', 'roble', 'blanco', 'roble', 'roble', 'roble'] },
+    { id: 'A', label: 'Tapa', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', modelUrl: '/Modelos 3d/primera pieza terminada.obj' },
+    { id: 'B', label: 'Piso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', modelUrl: '/maderita.gltf', finishes: ['roble', 'roble', 'blanco', 'roble', 'roble', 'roble'] },
     { id: 'C/D', label: 'Costados (Izquierdo y Derecho)', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '80x60x1.5' },
     { id: 'F', label: 'Entrepiso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '117x58x1.5' },
     { id: 'E', label: 'Separador abajo', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '30x58x1.5' },
