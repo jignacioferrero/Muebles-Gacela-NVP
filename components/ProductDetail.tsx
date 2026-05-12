@@ -32,19 +32,19 @@ const mockProductDetail: Product = {
   ],
   mainImages: [ // Imágenes principales actualizadas
     'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91369-bc36b6e0/Escena%20Art%20116.webp',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29549-0ae220bf/116R%20Real%20gris%20FF.jpg',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29550-7517ec64/116R%20Real%20FF.jpg',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29551-6986a0d5/116R%20real%203.jpg',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29581-1467c049/116R%20Real%20patas%20FF.jpg',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29549-0ae220bf/116R%20Real%20gris%20FF.webp',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29550-7517ec64/116R%20Real%20FF.webp',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29551-6986a0d5/116R%20real%203.webp',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29581-1467c049/116R%20Real%20patas%20FF.webp',
   ],
   thumbnails: [ // Miniaturas actualizadas (usando las mismas mainImages por simplicidad)
     'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/91369-bc36b6e0/Escena%20Art%20116.webp',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29549-0ae220bf/116R%20Real%20gris%20FF.jpg',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29550-7517ec64/116R%20Real%20FF.jpg',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29551-6986a0d5/116R%20real%203.jpg',
-    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29581-1467c049/116R%20Real%20patas%20FF.jpg',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29549-0ae220bf/116R%20Real%20gris%20FF.webp',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29550-7517ec64/116R%20Real%20FF.webp',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29551-6986a0d5/116R%20real%203.webp',
+    'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29581-1467c049/116R%20Real%20patas%20FF.webp',
   ],
-  technicalImage: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29553-d31928df/Art%20116%20%28Roble%20Natural-Blanco%29%20-%20Cotas.jpg', // Imagen técnica actualizada
+  technicalImage: 'https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/web/image/29553-d31928df/Art%20116%20%28Roble%20Natural-Blanco%29%20-%20Cotas.webp', // Imagen técnica actualizada
   specs: [ // Campos obligatorios CSV-ready
     { label: 'Línea', value: 'Nordik' },
     { label: 'Ambiente', value: 'Sala de Estar' },

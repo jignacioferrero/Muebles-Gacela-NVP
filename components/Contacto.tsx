@@ -133,7 +133,7 @@ const Contacto: React.FC = () => {
           <div className="lg:col-span-7 flex flex-col rounded-[2.5rem] overflow-hidden shadow-xl border border-[#D9CDB8]/40 bg-white">
             <div className="h-48 md:h-64 overflow-hidden relative">
               <img 
-                src="/images/Fábrica.jpg" 
+                src="/images/Fábrica.webp" 
                 alt="Fábrica Muebles Gacela" 
                 className="w-full h-full object-cover"
                 onError={(e) => {

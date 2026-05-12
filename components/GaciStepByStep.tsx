@@ -33,28 +33,28 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
   const [currentView, setCurrentView] = useState<GaciView>('welcome');
   const [userName, setUserName] = useState<string>(''); // Nuevo estado para el nombre del usuario
   const [checklistItems, setChecklistItems] = useState([
-    { id: 'A', label: 'Tapa', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', modelUrl: '/Modelos 3d/primera pieza terminada.obj' },
-    { id: 'B', label: 'Piso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x60x1.5', modelUrl: '/maderita.gltf', finishes: ['roble', 'roble', 'blanco', 'roble', 'roble', 'roble'] },
-    { id: 'C/D', label: 'Costados (Izquierdo y Derecho)', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '80x60x1.5' },
-    { id: 'F', label: 'Entrepiso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '117x58x1.5' },
-    { id: 'E', label: 'Separador abajo', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '30x58x1.5' },
-    { id: 'H', label: 'Separador arriba', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '15x58x1.5' },
-    { id: 'I', label: 'Base de patas', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '110x10x3' },
-    { id: 'L', label: 'Frentes de cajón', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '58x20x1.5' },
-    { id: 'M', label: 'Costados de cajón', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '50x15x1.2' },
-    { id: 'N', label: 'Fondos de cajón', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '55x48x0.3' },
-    { id: 'FondoMueble', label: 'Fondo de mueble', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.png', dimensions: '120x80x0.3' },
-    { id: 'Herrajes', label: 'Bolsa con herrajes', checked: false, imageUrl: 'https://verduonlinestore.com/img/cms/Blog/embolsado%20de%20herrajes%20ferreteria.jpg' },
+    { id: 'A', label: 'Tapa', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '120x60x1.5', modelUrl: '/Modelos 3d/primera pieza terminada.obj' },
+    { id: 'B', label: 'Piso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '120x60x1.5', modelUrl: '/maderita.gltf', finishes: ['roble', 'roble', 'blanco', 'roble', 'roble', 'roble'] },
+    { id: 'C/D', label: 'Costados (Izquierdo y Derecho)', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '80x60x1.5' },
+    { id: 'F', label: 'Entrepiso', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '117x58x1.5' },
+    { id: 'E', label: 'Separador abajo', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '30x58x1.5' },
+    { id: 'H', label: 'Separador arriba', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '15x58x1.5' },
+    { id: 'I', label: 'Base de patas', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '110x10x3' },
+    { id: 'L', label: 'Frentes de cajón', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '58x20x1.5' },
+    { id: 'M', label: 'Costados de cajón', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '50x15x1.2' },
+    { id: 'N', label: 'Fondos de cajón', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '55x48x0.3' },
+    { id: 'FondoMueble', label: 'Fondo de mueble', checked: false, imageUrl: 'https://accesorioscocina.com/wp-content/uploads/2018/01/juego-protector-campana90.webp', dimensions: '120x80x0.3' },
+    { id: 'Herrajes', label: 'Bolsa con herrajes', checked: false, imageUrl: 'https://verduonlinestore.com/img/cms/Blog/embolsado%20de%20herrajes%20ferreteria.webp' },
   ]);
 
   const [hardwareChecklistItems, setHardwareChecklistItems] = useState([
-    { id: 'pernos', label: '19 Pernos Minifix con caja', description: 'Los vas a usar para las uniones principales.', checked: false, imageUrl: 'https://renk-herrajes.com.ar/wp-content/uploads/2018/04/herrajes-renk-minifix-metalico-1.jpg' },
-    { id: 'tornillos_allen', label: '17 Tornillos Allen (7x50)', description: 'Los más largos, se ajustan con la llave que viene en la caja.', checked: false, imageUrl: 'https://i.postimg.cc/sX13d964/tornillos-allen.png' },
-    { id: 'tarugos', label: '30 Tarugos de madera (6x30)', description: '', checked: false, imageUrl: 'https://i.postimg.cc/Qtx1zD5D/tarugos-demadera.png' },
-    { id: 'guias_metalicas', label: '4 Pares de guías metálicas', description: 'Fíjate que son 8 piezas en total.', checked: false, imageUrl: 'https://i.postimg.cc/q733G5tq/guias-metalicas.png' },
-    { id: 'cola_vinilica', label: '1 Envase de cola vinílica', description: 'Úsala sin miedo pero con cuidado.', checked: false, imageUrl: 'https://i.postimg.cc/MGgH1N7x/cola-vinilica.png' },
-    { id: 'tornilleria_variada', label: 'Tornillería variada', description: '16 Varianta, 16 de 3.5x20, 8 de 4x40 y 6 de 3.5x25.', checked: false, imageUrl: 'https://i.postimg.cc/CKbVn7tM/tornilleria-variada.png' },
-    { id: 'manijas_clavos', label: '4 Manijas y el Set de clavos', description: '', checked: false, imageUrl: 'https://i.postimg.cc/y8B3fV8B/manijas-clavos.png' },
+    { id: 'pernos', label: '19 Pernos Minifix con caja', description: 'Los vas a usar para las uniones principales.', checked: false, imageUrl: 'https://renk-herrajes.com.ar/wp-content/uploads/2018/04/herrajes-renk-minifix-metalico-1.webp' },
+    { id: 'tornillos_allen', label: '17 Tornillos Allen (7x50)', description: 'Los más largos, se ajustan con la llave que viene en la caja.', checked: false, imageUrl: 'https://i.postimg.cc/sX13d964/tornillos-allen.webp' },
+    { id: 'tarugos', label: '30 Tarugos de madera (6x30)', description: '', checked: false, imageUrl: 'https://i.postimg.cc/Qtx1zD5D/tarugos-demadera.webp' },
+    { id: 'guias_metalicas', label: '4 Pares de guías metálicas', description: 'Fíjate que son 8 piezas en total.', checked: false, imageUrl: 'https://i.postimg.cc/q733G5tq/guias-metalicas.webp' },
+    { id: 'cola_vinilica', label: '1 Envase de cola vinílica', description: 'Úsala sin miedo pero con cuidado.', checked: false, imageUrl: 'https://i.postimg.cc/MGgH1N7x/cola-vinilica.webp' },
+    { id: 'tornilleria_variada', label: 'Tornillería variada', description: '16 Varianta, 16 de 3.5x20, 8 de 4x40 y 6 de 3.5x25.', checked: false, imageUrl: 'https://i.postimg.cc/CKbVn7tM/tornilleria-variada.webp' },
+    { id: 'manijas_clavos', label: '4 Manijas y el Set de clavos', description: '', checked: false, imageUrl: 'https://i.postimg.cc/y8B3fV8B/manijas-clavos.webp' },
   ]);
 
   const [step3ChecklistItems, setStep3ChecklistItems] = useState([
@@ -458,7 +458,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              src="https://i.postimg.cc/RZdf6TB8/Gemini-Generated-Image-ur2452ur2452ur24.png" // Placeholder, reemplazar con GIF/Video real
+              src="https://i.postimg.cc/RZdf6TB8/Gemini-Generated-Image-ur2452ur2452ur24.webp" // Placeholder, reemplazar con GIF/Video real
               alt="Proceso de unboxing"
               className="w-full max-w-xl h-auto object-cover rounded-lg shadow-lg mb-12 border-4 border-white"
             />

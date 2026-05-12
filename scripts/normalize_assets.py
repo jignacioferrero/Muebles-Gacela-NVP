@@ -29,7 +29,7 @@ def normalize_segment(s):
     # 5. Colapsar múltiples guiones seguidos a uno solo
     s = re.sub(r'-+', '-', s)
     
-    # 6. Limpiar guiones al inicio o final del segmento (ej: -archivo-.png -> archivo.png)
+    # 6. Limpiar guiones al inicio o final del segmento (ej: -archivo-.webp -> archivo.webp)
     # Conservamos la extensión, limpiamos el nombre base
     if '.' in s and not s.startswith('.'):
         parts = s.rsplit('.', 1)

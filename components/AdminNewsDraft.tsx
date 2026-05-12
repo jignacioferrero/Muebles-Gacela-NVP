@@ -152,7 +152,7 @@ const AdminNewsDraft: React.FC = () => {
                     name="coverImage"
                     value={post.coverImage}
                     onChange={handleInputChange}
-                    placeholder="/images/nombre-imagen.png"
+                    placeholder="/images/nombre-imagen.webp"
                     className="w-full bg-[#F8F5F1] border-none p-4 rounded-lg focus:ring-2 focus:ring-[#9B754E]"
                   />
                   <p className="mt-2 text-[10px] text-[#2B341F]/40 italic">Para usar imágenes externas, pegá el link completo (https://...)</p>

@@ -77,7 +77,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
     setTimeout(() => {
       // Mock de una imagen generada. En un escenario real, esto sería una combinación
       // de la imagen de fondo y el mueble.
-      const mockGenerated = 'https://i.postimg.cc/wjxwx0K3/Gemini-Generated-Image-m0wdc2m0wdc2m0wd.png'; // Reemplazar con una URL real o manipulación de imágenes
+      const mockGenerated = 'https://i.postimg.cc/wjxwx0K3/Gemini-Generated-Image-m0wdc2m0wdc2m0wd.webp'; // Reemplazar con una URL real o manipulación de imágenes
       setGeneratedImageUrl(mockGenerated);
       setIsLoading(false);
       setCurrentStep('result');
@@ -486,7 +486,7 @@ const ARLandingPage: React.FC<ARLandingPageProps> = ({ onBackToPdp, initialSelec
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href={generatedImageUrl}
-                download="gacela-ar-space.png"
+                download="gacela-ar-space.webp"
                 className="flex items-center justify-center px-8 py-3 bg-brand-support text-brand-bg rounded-md text-sm font-semibold uppercase tracking-widest hover:bg-brand-support-hover transition-colors shadow-lg"
                 aria-label="Descargar imagen generada"
               >

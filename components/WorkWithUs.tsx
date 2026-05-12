@@ -50,7 +50,7 @@ const WorkWithUs: React.FC = () => {
 
             <div className="relative group overflow-hidden rounded-[3rem] shadow-2xl shadow-brand-primary/10 aspect-[4/3] lg:aspect-auto h-[400px] lg:h-[500px]">
                <img 
-                 src="/images/talento.png" 
+                 src="/images/talento.webp" 
                  alt="Gacela Team transformation 4.0"
                  className="w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-110"
                />

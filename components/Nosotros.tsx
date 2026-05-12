@@ -19,25 +19,25 @@ const Nosotros: React.FC = () => {
       year: "1991",
       title: "TECNOLOGÍA",
       subtitle: "Primera gran incorporación de maquinaria avanzada",
-      image: "/images/1991.png"
+      image: "/images/1991.webp"
     },
     {
       year: "2011",
       title: "CALIDAD",
       subtitle: "Profesionalización del equipo y Certificación de Normas",
-      image: "/images/2011.png"
+      image: "/images/2011.webp"
     },
     {
       year: "2016",
       title: "IDENTIDAD",
       subtitle: "Renovación de nuestra imagen e isologo hacia el futuro",
-      image: "/images/2016.png"
+      image: "/images/2016.webp"
     },
     {
       year: "2026",
       title: "GACELA 4.0",
       subtitle: "Agilidad, diseño y tecnología al servicio del cliente",
-      image: "/images/2025.png"
+      image: "/images/2025.webp"
     }
   ];
 
@@ -80,7 +80,7 @@ const Nosotros: React.FC = () => {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[#2B341F] mix-blend-multiply opacity-80 z-10 pointer-events-none"></div>
           <img 
-            src="/images/Fábrica.jpg" 
+            src="/images/Fábrica.webp" 
             alt="Planta Industrial Muebles Gacela" 
             className="w-full h-full object-cover grayscale brightness-75"
           />
@@ -137,7 +137,7 @@ const Nosotros: React.FC = () => {
             >
               <div className="relative w-full h-full min-h-[300px] overflow-hidden rounded-2xl shadow-xl">
                 <img 
-                  src="/images/Gacela.png" 
+                  src="/images/Gacela.webp" 
                   alt="Gacela Marca" 
                   className="w-full h-full object-cover"
                 />
@@ -424,7 +424,7 @@ const Nosotros: React.FC = () => {
           <div className="absolute inset-0 bg-[#2B341F]/60 z-10 transition-colors duration-700 group-hover:bg-[#2B341F]/50"></div>
           
           <img 
-            src="/images/talento.png" 
+            src="/images/talento.webp" 
             alt="sumate al equipo gacela" 
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />

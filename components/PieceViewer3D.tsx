@@ -37,7 +37,7 @@ const MaderaPieza: React.FC<{ dimensions: string, finishes?: string[] }> = ({ di
     const defaultFinishes = (finishes && finishes.length === 6) ? finishes : ['roble', 'roble', 'roble', 'roble', 'roble', 'roble'];
 
     // Cargamos texturas (usaremos placeholders de alta calidad que simulen Roble y Blanco)
-    const woodTexture = useTexture('https://i.postimg.cc/mD8N05p4/Gemini-Generated-Image-k9r42rk9r42rk9r4.png'); // Textura de Roble
+    const woodTexture = useTexture('https://i.postimg.cc/mD8N05p4/Gemini-Generated-Image-k9r42rk9r42rk9r4.webp'); // Textura de Roble
     woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping;
 
     // Convertimos a unidades de escena (escala 0.05 para que no sea gigante)

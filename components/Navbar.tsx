@@ -232,7 +232,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogoClick, onProductClick }) => {
         id: index, // Usamos el índice como ID temporal ya que el SKU es string
         title: p.Nombre_Comercial,
         shortDescription: `${p.Linea} | ${p.Ambiente}`,
-        image: p.Fotos_Mueble ? p.Fotos_Mueble.split(';')[0].trim() : '/images/placeholder.png',
+        image: p.Fotos_Mueble ? p.Fotos_Mueble.split(';')[0].trim() : '/images/placeholder.webp',
         sku: p.SKU,
         linea: p.Linea, // Importante para que el router sepa adónde dirigir el click
         rating: 5,

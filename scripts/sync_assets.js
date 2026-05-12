@@ -142,7 +142,7 @@ function scan() {
 
          if (ext === '.pdf') {
             manualPdf = relativePath;
-         } else if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+         } else if (['.webp', '.webp', '.webp', '.webp'].includes(ext)) {
             if (fileName.includes('medidas') || fileName.includes('cotas')) {
                 imagenTecnica = relativePath;
             } else if (fileName.includes('escena')) {

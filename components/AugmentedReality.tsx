@@ -65,7 +65,7 @@ const AugmentedReality: React.FC<AugmentedRealityProps> = ({ onStartAR }) => {
               <div className="relative group">
                 {/* Imagen proporcionada por el usuario */}
                 <img 
-                  src="https://i.postimg.cc/257sRZMD/Adobe-Express-file.png" 
+                  src="https://i.postimg.cc/257sRZMD/Adobe-Express-file.webp" 
                   alt="Smartphone con Realidad Aumentada Gacela" 
                   className="w-full h-auto drop-shadow-[0_50px_80px_rgba(0,0,0,0.15)] transition-transform duration-700 group-hover:scale-[1.02]"
                 />

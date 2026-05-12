@@ -106,7 +106,7 @@ const Catalog: React.FC = () => {
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center pt-20">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/images/hero-home.png" 
+            src="/images/hero-home.webp" 
             alt="Portfolio Gacela" 
             className="w-full h-full object-cover"
           />

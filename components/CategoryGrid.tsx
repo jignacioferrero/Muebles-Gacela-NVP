@@ -26,7 +26,7 @@ const categories = [
   },
   {
     title: 'Cocina',
-    image: '/images/Cocina.png',
+    image: '/images/Cocina.webp',
     description: 'Sabores e inspiración'
   }
 ];
