@@ -59,25 +59,25 @@ const QualitySustainability: React.FC = () => {
         {/* Grilla de Características */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-16 gap-x-8">
           <Feature 
-            icon={<ShieldCheckIcon className="h-12 w-12 text-brand-primary" />} 
+            icon={<img src="/images/iso.png" alt="Certificación ISO 9001" className="max-h-16 w-auto object-contain" />} 
             title="ISO 9001" 
             delay={0.1}
             description="Cumplimos con estándares internacionales que garantizan la excelencia en cada proceso de fabricación." 
           />
           <Feature 
-            icon={<LeafIcon className="h-12 w-12 text-brand-primary" />} 
+            icon={<img src="/images/eco.png" alt="Eco-friendly" className="max-h-16 w-auto object-contain" />} 
             title="ECO-FRIENDLY" 
             delay={0.2}
             description="Nuestro compromiso ambiental nos lleva a utilizar procesos de bajo impacto y acabados no tóxicos." 
           />
           <Feature 
-            icon={<RtaIcon className="h-12 w-12 text-brand-primary" />} 
+            icon={<img src="/images/rta.png" alt="Sistema RTA" className="max-h-16 w-auto object-contain" />} 
             title="SISTEMA RTA" 
             delay={0.3}
             description="Diseño inteligente 'Ready to Assemble' que optimiza la logística y reduce la huella de carbono." 
           />
           <Feature 
-            icon={<RecycleIcon className="h-12 w-12 text-brand-primary" />} 
+            icon={<img src="/images/materiales.png" alt="Materiales Nobles" className="max-h-16 w-auto object-contain" />} 
             title="MATERIALES NOBLES" 
             delay={0.4}
             description="Utilizamos maderas de fuentes renovables y materiales reciclables para muebles que duran toda la vida." 

@@ -2,18 +2,43 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Phone, MapPin, Briefcase, FileText, Upload, Send, MessageCircle, X, CheckCircle, ArrowRight } from 'lucide-react';
+import { sendEmail } from '../utils/email';
 
 const WorkWithUs: React.FC = () => {
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [selectedCV, setSelectedCV] = useState<File | null>(null);
   const cvInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
-    setTimeout(() => {
+    const form = formRef.current;
+    if (!form) return;
+    const data = new FormData(form);
+    const nombre    = data.get('nombre')    as string || '';
+    const email     = data.get('email')     as string || '';
+    const telefono  = data.get('telefono')  as string || 'No provisto';
+    const ubicacion = data.get('ubicacion') as string || 'No provista';
+    const area      = data.get('area')      as string || 'Sin especificar';
+    const presentacion = data.get('presentacion') as string || '';
+    const adjunto   = selectedCV ? `CV Adjunto: ${selectedCV.name} (${(selectedCV.size/1024).toFixed(1)} KB)` : 'Sin adjunto';
+
+    try {
+      await sendEmail({
+        subject:    `Postulación Laboral - ${area}`,
+        from_name:  nombre,
+        from_email: email,
+        message:    `POSTULACIÓN LABORAL\n\nNombre: ${nombre}\nEmail: ${email}\nTeléfono: ${telefono}\nUbicación: ${ubicacion}\nÁrea: ${area}\n\nPresentación:\n${presentacion}\n\n${adjunto}`,
+      });
       setFormStatus('success');
-    }, 2500);
+      setSelectedCV(null);
+      form.reset();
+    } catch (err) {
+      console.error('[WorkWithUs] Error al enviar postulación:', err);
+      setFormStatus('error');
+      setTimeout(() => setFormStatus('idle'), 4000);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,6 +134,7 @@ const WorkWithUs: React.FC = () => {
                   </motion.div>
                 ) : (
                   <motion.form 
+                    ref={formRef}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -123,6 +149,7 @@ const WorkWithUs: React.FC = () => {
                           </label>
                           <input 
                             required
+                            name="nombre"
                             type="text" 
                             className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-4 focus:ring-brand-support/10 outline-none text-[#594A42] placeholder:text-[#A69785]/40 font-clofie font-light text-lg transition-all"
                             placeholder="Ej: Sofía González"
@@ -134,6 +161,7 @@ const WorkWithUs: React.FC = () => {
                           </label>
                           <input 
                             required
+                            name="email"
                             type="email" 
                             className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-4 focus:ring-brand-support/10 outline-none text-[#594A42] placeholder:text-[#A69785]/40 font-clofie font-light text-lg transition-all"
                             placeholder="ejemplo@gmail.com"
@@ -147,6 +175,7 @@ const WorkWithUs: React.FC = () => {
                              Teléfono de contacto
                           </label>
                           <input 
+                            name="telefono"
                             type="tel" 
                             className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-4 focus:ring-brand-support/10 outline-none text-[#594A42] placeholder:text-[#A69785]/40 font-clofie font-light text-lg transition-all"
                             placeholder="Ej: 358 1234567"
@@ -157,6 +186,7 @@ const WorkWithUs: React.FC = () => {
                              Provincia / Ciudad
                           </label>
                           <input 
+                            name="ubicacion"
                             type="text" 
                             className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-4 focus:ring-brand-support/10 outline-none text-[#594A42] placeholder:text-[#A69785]/40 font-clofie font-light text-lg transition-all"
                             placeholder="Ej: Córdoba, Río Cuarto"
@@ -171,6 +201,7 @@ const WorkWithUs: React.FC = () => {
                         <div className="relative">
                           <select 
                             required
+                            name="area"
                             className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-4 focus:ring-brand-support/10 outline-none text-[#594A42] font-clofie font-light text-lg appearance-none cursor-pointer overflow-hidden transition-all"
                           >
                             <option value="">Seleccioná un área</option>
@@ -191,6 +222,7 @@ const WorkWithUs: React.FC = () => {
                            Breve presentación
                         </label>
                         <textarea 
+                          name="presentacion"
                           rows={4}
                           className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-4 focus:ring-brand-support/10 outline-none text-[#594A42] placeholder:text-[#A69785]/40 font-clofie font-light text-lg resize-none transition-all"
                           placeholder="Contanos por qué te gustaría sumarte a Gacela..."
@@ -271,7 +303,7 @@ const WorkWithUs: React.FC = () => {
                         transition={{ duration: 2.5, ease: "easeInOut" }}
                       />
                       <span className="relative z-10 flex items-center gap-4">
-                        {formStatus === 'submitting' ? 'Enviando postulación...' : 'Enviar mi postulación'}
+                        {formStatus === 'submitting' ? 'Enviando postulación...' : formStatus === 'error' ? 'Error al enviar. Reintentar' : 'Enviar mi postulación'}
                         <Send size={20} className={formStatus === 'submitting' ? 'animate-pulse' : 'group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform'} />
                       </span>
                     </button>

@@ -6,6 +6,7 @@ import ImageViewer from './ImageViewer';
 import VideoViewer from './VideoViewer';
 import PieceViewer3D from './PieceViewer3D';
 import confetti from 'canvas-confetti';
+import { sendEmail } from '../utils/email';
 
 const LucideIcons: { [key: string]: React.ComponentType<any> } = {
   Hammer: Hammer,
@@ -64,7 +65,7 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
   ]);
 
   const [feedbackFormData, setFeedbackFormData] = useState({ name: '', email: '', comments: '' });
-  const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'sending' | 'success'>('idle');
+  const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
 
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
@@ -144,15 +145,24 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
     setFeedbackFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitFeedback = (e: React.FormEvent) => {
+  const handleSubmitFeedback = async (e: React.FormEvent) => {
     e.preventDefault();
     setFeedbackStatus('sending');
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await sendEmail({
+        subject:    `Feedback Armado Guiado - ${product.title}`,
+        from_name:  feedbackFormData.name,
+        from_email: feedbackFormData.email,
+        message:    `FEEDBACK DE ARMADO GUIADO\n\nProducto: ${product.title}\nNombre: ${feedbackFormData.name}\nEmail: ${feedbackFormData.email}\n\nObservaciones:\n${feedbackFormData.comments}`,
+      });
       setFeedbackStatus('success');
       setFeedbackFormData({ name: '', email: '', comments: '' });
-      setTimeout(() => setFeedbackStatus('idle'), 3000); // Reset status after 3 seconds
-    }, 1500);
+      setTimeout(() => setFeedbackStatus('idle'), 4000);
+    } catch (err) {
+      console.error('[GaciStepByStep] Error al enviar feedback:', err);
+      setFeedbackStatus('error');
+      setTimeout(() => setFeedbackStatus('idle'), 4000);
+    }
   };
 
   const openImageViewer = (url: string) => {
@@ -800,10 +810,18 @@ const GaciStepByStep: React.FC<GaciStepByStepProps> = ({ product, onBackToPdp, o
                     ? 'bg-gray-400 cursor-not-allowed'
                     : feedbackStatus === 'success'
                       ? 'bg-green-600'
-                      : 'bg-brand-support hover:bg-brand-support-hover'
+                      : feedbackStatus === 'error'
+                        ? 'bg-red-600'
+                        : 'bg-brand-support hover:bg-brand-support-hover'
                     }`}
                 >
-                  {feedbackStatus === 'sending' ? 'Enviando...' : feedbackStatus === 'success' ? '¡Gracias por ayudarnos a mejorar!' : 'Enviar mis comentarios'}
+                  {feedbackStatus === 'sending' 
+                    ? 'Enviando...' 
+                    : feedbackStatus === 'success' 
+                      ? '¡Gracias por ayudarnos a mejorar!' 
+                      : feedbackStatus === 'error'
+                        ? 'Error al enviar, reintentar'
+                        : 'Enviar mis comentarios'}
                 </button>
               </form>
             </motion.div>

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Hero from './Hero';
 import CategoryGrid from './CategoryGrid';
 import PopularProducts from './PopularProducts';
-import QualitySustainability from './QualitySustainability';
+
 import NewsSection from './NewsSection';
 import Newsletter from './Newsletter';
 import { Product } from '../types/product';
@@ -28,7 +28,7 @@ const Home: React.FC<HomeProps> = ({ onProductClick, onStartAR }) => {
       <Hero />
       <CategoryGrid />
       <PopularProducts onProductClick={onProductClick} />
-      <QualitySustainability />
+
       <NewsSection />
       <Newsletter />
     </motion.div>

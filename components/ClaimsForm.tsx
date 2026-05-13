@@ -2,20 +2,40 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, User, MessageSquare, Upload, CheckCircle, AlertCircle, MessageCircle, ArrowRight, FileText, X } from 'lucide-react';
+import { sendEmail } from '../utils/email';
 
 const ClaimsForm: React.FC = () => {
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
-    // Mocking an API call
-    setTimeout(() => {
+    const form = formRef.current;
+    if (!form) return;
+    const data = new FormData(form);
+    const nombre    = data.get('nombre')    as string || '';
+    const email     = data.get('email')     as string || '';
+    const asunto    = data.get('asunto')    as string || 'Sin especificar';
+    const descripcion = data.get('descripcion') as string || '';
+    const adjunto   = selectedFile ? `Archivo adjunto: ${selectedFile.name} (${(selectedFile.size/1024).toFixed(1)} KB)` : 'Sin adjunto';
+    try {
+      await sendEmail({
+        subject:    `Reclamo Post-Venta - ${asunto}`,
+        from_name:  nombre,
+        from_email: email,
+        message:    `RECLAMO POST-VENTA\n\nNombre: ${nombre}\nEmail: ${email}\nMotivo: ${asunto}\n\nDescripción:\n${descripcion}\n\n${adjunto}`,
+      });
       setFormStatus('success');
       setSelectedFile(null);
-    }, 2000);
+      form.reset();
+    } catch (err) {
+      console.error('[ClaimsForm] Error al enviar:', err);
+      setFormStatus('error');
+      setTimeout(() => setFormStatus('idle'), 4000);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,6 +98,7 @@ const ClaimsForm: React.FC = () => {
                   </motion.div>
                 ) : (
                   <motion.form 
+                    ref={formRef}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -91,6 +112,7 @@ const ClaimsForm: React.FC = () => {
                         </label>
                         <input 
                           required
+                          name="nombre"
                           type="text" 
                           placeholder="Juan Pérez"
                           className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-2 focus:ring-brand-support/20 outline-none text-[#594A42] placeholder:text-[#A69785]/50 font-clofie font-light text-lg focus:bg-white transition-all shadow-inner shadow-black/[0.02]"
@@ -102,6 +124,7 @@ const ClaimsForm: React.FC = () => {
                         </label>
                         <input 
                           required
+                          name="email"
                           type="email" 
                           placeholder="ejemplo@correo.com"
                           className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-2 focus:ring-brand-support/20 outline-none text-[#594A42] placeholder:text-[#A69785]/50 font-clofie font-light text-lg focus:bg-white transition-all shadow-inner shadow-black/[0.02]"
@@ -116,6 +139,7 @@ const ClaimsForm: React.FC = () => {
                       <div className="relative">
                         <select 
                           required
+                          name="asunto"
                           className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-2 focus:ring-brand-support/20 outline-none text-[#594A42] appearance-none cursor-pointer font-clofie font-light text-lg focus:bg-white transition-all shadow-inner shadow-black/[0.02]"
                         >
                           <option value="">Seleccioná un motivo</option>
@@ -136,6 +160,7 @@ const ClaimsForm: React.FC = () => {
                         <MessageSquare size={12} className="text-brand-support" /> Descripción detallada
                       </label>
                       <textarea 
+                        name="descripcion"
                         rows={5}
                         placeholder="Contanos qué pasó..."
                         className="w-full bg-[#FAF8F5] border border-[#D9CDB8]/20 px-6 py-5 rounded-2xl focus:ring-2 focus:ring-brand-support/20 outline-none text-[#594A42] placeholder:text-[#A69785]/50 font-clofie font-light text-lg resize-none focus:bg-white transition-all shadow-inner shadow-black/[0.02]"
