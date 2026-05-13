@@ -67,7 +67,7 @@ const ClaimsForm: React.FC = () => {
             Estamos para <br/><span className="text-brand-support font-black">solucionarlo</span>
           </h1>
           <p className="mt-8 text-xl text-[#8C7A6B] font-clofie font-light leading-relaxed max-w-2xl mx-auto">
-            Si recibiste un componente dañado, te falta un herraje o algo no encastra como debería, nuestro equipo de calidad se encargará de resolverlo en menos de 24 horas hábiles.
+            Trabajamos bajo los estándares de control de calidad más rigurosos para que tu experiencia sea perfecta. Sin embargo, para tu total tranquilidad, ante cualquier eventualidad excepcional, nuestro equipo de respaldo garantiza una respuesta resolutiva en menos de 24 horas hábiles.
           </p>
         </div>
 
