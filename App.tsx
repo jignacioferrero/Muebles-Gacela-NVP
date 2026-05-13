@@ -110,7 +110,7 @@ const App: React.FC = () => {
               element={
                 <ProductDetail 
                   product={selectedProduct} // Pass it if coming from home, ProductDetail will fallback to JSON if missing
-                  onBackClick={handleLogoClick} 
+                  onBackClick={handleBackToPdp} 
                   onStartAssembly={handleStartAssembly} 
                   onStartAR={handleStartAR} 
                 />

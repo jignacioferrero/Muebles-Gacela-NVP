@@ -133,47 +133,64 @@ const SinglePost: React.FC = () => {
 
       {/* RELATED PRODUCTS */}
       {relatedProducts.length > 0 && (
-          <section className="pt-16 px-6">
+          <section className="pt-16 px-6 pb-24">
               <div className="container mx-auto max-w-7xl border-t border-[#D9CDB8]/40 pt-20">
-                  <div className="text-center mb-12">
-                      <h2 className="text-[14px] font-outersans font-thin uppercase tracking-[0.4em] text-brand-support mb-4">Catálogo Asignado</h2>
-                      <h3 className="text-3xl md:text-5xl font-godber font-normal uppercase tracking-[0.05em] text-brand-primary">Productos Relacionados</h3>
+                  <div className="text-center mb-14">
+                      <h2 className="text-[14px] font-outersans font-thin uppercase tracking-[0.4em] text-brand-support mb-4">Catálogo Relacionado</h2>
+                      <h3 className="text-3xl md:text-5xl font-godber font-normal uppercase tracking-[0.05em] text-brand-primary">Productos Destacados</h3>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-                      {relatedProducts.map((product) => {
-                          const fotos = product.URLs_Fotos ? product.URLs_Fotos.split(';') : [];
-                          const mainPhoto = fotos.length > 0 ? fotos[0] : 'https://placehold.co/600x600/f2f2f2/1a1a1a?text=Foto+Pendiente';
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
+                      {relatedProducts.map((product, idx) => {
+                          const fotos = product.Fotos_Mueble ? (product.Fotos_Mueble as string).split(/[;,]\s*/).filter(Boolean) : [];
+                          const mainPhoto = fotos.length > 0 ? fotos[0] : 'https://placehold.co/600x800/f2f2f2/1a1a1a?text=Foto+Pendiente';
+                          const lineaSlug = product.Linea ? String(product.Linea).toLowerCase().replace(/\s+/g, '-') : 'producto';
+                          const productUrl = `/${lineaSlug}/${product.SKU}`;
                           
                           return (
                               <motion.div
                                   key={product.SKU}
-                                  initial={{ opacity: 0, y: 20 }}
+                                  initial={{ opacity: 0, y: 24 }}
                                   whileInView={{ opacity: 1, y: 0 }}
                                   viewport={{ once: true }}
-                                  className="group flex flex-col items-center cursor-pointer"
+                                  transition={{ delay: idx * 0.08 }}
+                                  className="group flex flex-col cursor-pointer"
                               >
-                                  <Link to={`/productos/${product.slug}`} className="block w-full text-center">
-                                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 flex items-center justify-center bg-white shadow-sm border border-[#EAE3D9] group-hover:shadow-md transition-all">
-                                          <img 
-                                              src={mainPhoto} 
-                                              alt={product.Nombre_Comercial as string} 
-                                              className="w-[85%] h-[85%] object-contain group-hover:scale-105 transition-transform duration-500"
-                                              onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x600/f2f2f2/1a1a1a?text=Foto+Invalida'; }}
+                                  <Link to={productUrl} onClick={() => window.scrollTo(0,0)} className="block w-full">
+                                      <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-3 bg-white shadow-sm group-hover:shadow-md transition-all duration-300">
+                                          <img
+                                              src={mainPhoto}
+                                              alt={product.Nombre_Comercial as string}
+                                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                              onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x800/f2f2f2/1a1a1a?text=Foto+Pendiente'; }}
                                           />
+                                          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                          <div className="absolute bottom-4 left-4 right-4 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                              <span className="inline-flex items-center gap-1.5 text-white text-[10px] font-clofie font-bold uppercase tracking-widest">
+                                                  Ver Detalles <ArrowRight size={10} />
+                                              </span>
+                                          </div>
                                       </div>
-                                      <h3 className="text-lg font-godber uppercase text-brand-primary tracking-wider group-hover:text-brand-support transition-colors">{product.Nombre_Comercial as string}</h3>
-                                      
-                                      <div className="flex gap-2 justify-center mt-3 mb-3">
-                                          <div className="w-3 h-3 rounded-full bg-[#8C7A6B]"></div>
-                                          <div className="w-3 h-3 rounded-full bg-[#CFB59D]"></div>
-                                      </div>
-
-                                      <p className="text-[10px] font-clofie text-[#A69785] tracking-widest uppercase mt-1">Ver Detalles <ArrowRight size={10} className="inline ml-1" /></p>
+                                      <span className="inline-block px-2 py-0.5 bg-[#EAE3D9] text-[#8C7A6B] text-[9px] font-outersans font-thin uppercase tracking-[0.2em] rounded-full mb-1.5">
+                                          {product.Linea as string} · {product.Ambiente as string}
+                                      </span>
+                                      <h3 className="text-sm font-godber uppercase text-brand-primary tracking-wide group-hover:text-brand-support transition-colors leading-tight">
+                                          {product.Nombre_Comercial as string}
+                                      </h3>
                                   </Link>
                               </motion.div>
                           );
                       })}
+                  </div>
+
+                  <div className="mt-14 text-center">
+                      <Link
+                          to="/productos"
+                          onClick={() => window.scrollTo(0,0)}
+                          className="inline-flex items-center gap-3 px-8 py-3.5 border border-brand-primary text-brand-primary text-[12px] font-clofie font-bold uppercase tracking-[0.2em] rounded-full hover:bg-brand-primary hover:text-white transition-all duration-300"
+                      >
+                          Ver Catálogo Completo <ArrowRight size={14} />
+                      </Link>
                   </div>
               </div>
           </section>

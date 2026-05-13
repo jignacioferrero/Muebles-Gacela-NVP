@@ -32,6 +32,27 @@ const categories = [
 ];
 
 const CategoryGrid: React.FC = () => {
+  const [dragWidth, setDragWidth] = React.useState(0);
+  const carouselRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const calculateWidth = () => {
+      if (carouselRef.current) {
+        setDragWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
+      }
+    };
+
+    calculateWidth();
+    // Un pequeño timeout por si el renderizado de fuentes o elementos se retrasa ligeramente
+    const timer = setTimeout(calculateWidth, 200);
+
+    window.addEventListener('resize', calculateWidth);
+    return () => {
+      window.removeEventListener('resize', calculateWidth);
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <section className="py-20 bg-white overflow-hidden">
       <div className="container mx-auto px-6 lg:px-12">
@@ -87,8 +108,9 @@ const CategoryGrid: React.FC = () => {
         {/* Layout Mobile: Carrusel Interactivo */}
         <div className="md:hidden">
           <motion.div 
+            ref={carouselRef}
             drag="x"
-            dragConstraints={{ right: 0, left: -850 }}
+            dragConstraints={{ right: 0, left: -dragWidth }}
             className="flex space-x-6 cursor-grab active:cursor-grabbing"
           >
             {categories.map((cat) => (
