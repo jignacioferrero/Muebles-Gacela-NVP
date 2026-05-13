@@ -12,11 +12,13 @@ const TopBar: React.FC = () => {
         
         <div className="flex items-center">
           <a 
-            href="#" 
+            href="https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/shop" 
+            target="_blank" 
+            rel="noopener noreferrer" 
             className="flex items-center text-[10px] md:text-[11px] font-medium tracking-wider hover:text-white transition-colors duration-300 group"
           >
             <User size={14} className="mr-2 opacity-60 group-hover:opacity-100 transition-opacity stroke-[1.5px]" />
-            <span className="uppercase">Venta Mayorista</span>
+            <span className="uppercase">Compra mayorista</span>
           </a>
         </div>
       </div>

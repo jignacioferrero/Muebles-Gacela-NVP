@@ -312,76 +312,124 @@ const Navbar: React.FC<NavbarProps> = ({ onLogoClick, onProductClick }) => {
           onMouseLeave={() => setActiveDropdown(null)} 
         />
 
-        {/* Acciones Derecha */}
-        <div className="flex items-center space-x-2 md:space-x-3">
-          <div className="flex items-center relative z-[201]">
-            <AnimatePresence>
-              {isSearchExpanded && (
-                <div className="relative">
-                  <motion.input
+        {/* Search Overlay flotante */}
+        <AnimatePresence>
+          {isSearchExpanded && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[500] flex flex-col items-center pt-24 px-4"
+              style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', backgroundColor: 'rgba(250,248,245,0.85)' }}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  setIsSearchExpanded(false);
+                  setSearchQuery('');
+                  setSuggestions([]);
+                }
+              }}
+            >
+              {/* Input centrado */}
+              <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                transition={{ duration: 0.25, delay: 0.05 }}
+                className="w-full max-w-xl relative"
+              >
+                <div className="flex items-center bg-white border border-[#D9CDB8] rounded-2xl shadow-2xl px-5 py-4 gap-3">
+                  <Search size={20} strokeWidth={1.5} className="text-[#A69785] flex-shrink-0" />
+                  <input
                     autoFocus
-                    initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 220, opacity: 1 }}
-                    exit={{ width: 0, opacity: 0 }}
                     type="text"
                     value={searchQuery}
                     onChange={handleSearchChange}
                     placeholder="¿Qué buscás para tu hogar?"
-                    className="bg-[#EAE3D9] border-none px-4 py-1.5 text-[13px] rounded-md focus:ring-1 focus:ring-[#8C7A6B] outline-none text-[#594A42] placeholder:text-[#A69785]"
+                    className="flex-1 bg-transparent border-none outline-none text-[15px] text-[#2B341F] placeholder:text-[#A69785] font-clofie font-light"
                   />
+                  <button
+                    onClick={() => {
+                      setIsSearchExpanded(false);
+                      setSearchQuery('');
+                      setSuggestions([]);
+                    }}
+                    className="text-[#A69785] hover:text-[#2B341F] transition-colors flex-shrink-0 p-1"
+                  >
+                    <X size={18} strokeWidth={1.5} />
+                  </button>
+                </div>
 
-                  {/* Sugerencias Inteligentes */}
-                  <AnimatePresence>
-                    {suggestions.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full right-0 mt-2 w-[280px] bg-white rounded-2xl shadow-xl border border-[#EAE3D9] overflow-hidden flex flex-col z-[202]"
-                      >
-                        <div className="px-4 py-2 bg-[#FDFBF7] text-[10px] uppercase tracking-widest font-bold text-[#A69785] border-b border-[#EAE3D9]">
-                          Sugerencias para vos
-                        </div>
-                        <div className="max-h-[350px] overflow-y-auto">
-                          {suggestions.map((product) => (
-                            <button
-                              type="button"
-                              key={product.id}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleSuggestionClick(product);
-                              }}
-                              className="flex items-center p-3 hover:bg-[#FDFBF7] group transition-colors text-left w-full border-b border-[#EAE3D9] last:border-0 cursor-pointer"
-                            >
-                              <img src={product.image} alt="" className="w-10 h-10 rounded-lg object-cover mr-3 border border-[#EAE3D9]" />
-                              <div>
-                                <p className="text-[12px] font-bold text-[#2B341F] group-hover:text-[#594A42] transition-colors">{product.title}</p>
-                                <p className="text-[10px] text-[#8C7A6B] line-clamp-1">{product.shortDescription}</p>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                        {totalSearchResults > 6 && (
+                {/* Sugerencias */}
+                <AnimatePresence>
+                  {suggestions.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.2 }}
+                      className="mt-3 w-full bg-white rounded-2xl shadow-xl border border-[#EAE3D9] overflow-hidden flex flex-col"
+                    >
+                      <div className="px-5 py-2.5 bg-[#FDFBF7] text-[10px] uppercase tracking-widest font-bold text-[#A69785] border-b border-[#EAE3D9]">
+                        Sugerencias para vos
+                      </div>
+                      <div className="max-h-[55vh] overflow-y-auto">
+                        {suggestions.map((product) => (
                           <button
                             type="button"
-                            onClick={() => {
-                              navigate(`/productos?search=${encodeURIComponent(searchQuery)}`);
-                              setSearchQuery('');
-                              setSuggestions([]);
+                            key={product.id}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleSuggestionClick(product);
                               setIsSearchExpanded(false);
                             }}
-                            className="w-full p-3 bg-[#FAF8F5] text-[11px] font-bold text-[#8C7A6B] hover:text-[#594A42] hover:bg-[#EAE3D9] transition-colors text-center border-t border-[#EAE3D9]"
+                            className="flex items-center p-4 hover:bg-[#FDFBF7] group transition-colors text-left w-full border-b border-[#EAE3D9] last:border-0 cursor-pointer"
                           >
-                            Ver los {totalSearchResults} resultados para "{searchQuery}"...
+                            <img src={product.image} alt="" className="w-12 h-12 rounded-xl object-cover mr-4 border border-[#EAE3D9] flex-shrink-0" />
+                            <div>
+                              <p className="text-[13px] font-bold text-[#2B341F] group-hover:text-[#594A42] transition-colors">{product.title}</p>
+                              <p className="text-[11px] text-[#8C7A6B] line-clamp-1 mt-0.5">{product.shortDescription}</p>
+                            </div>
                           </button>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              )}
-            </AnimatePresence>
+                        ))}
+                      </div>
+                      {totalSearchResults > 6 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigate(`/productos?search=${encodeURIComponent(searchQuery)}`);
+                            setSearchQuery('');
+                            setSuggestions([]);
+                            setIsSearchExpanded(false);
+                          }}
+                          className="w-full p-4 bg-[#2B341F] text-[#ECE2D2] text-[12px] font-clofie font-bold uppercase tracking-widest hover:bg-[#594A42] transition-colors text-center"
+                        >
+                          Ver los {totalSearchResults} resultados →
+                        </button>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Hint cuando no hay texto */}
+                {searchQuery.length === 0 && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center text-[12px] text-[#A69785] font-clofie font-light mt-5 tracking-wide"
+                  >
+                    Buscá por nombre, línea o ambiente
+                  </motion.p>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Acciones Derecha */}
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <div className="flex items-center">
             <button
               onClick={() => {
                 setIsSearchExpanded(!isSearchExpanded);
@@ -514,13 +562,19 @@ const Navbar: React.FC<NavbarProps> = ({ onLogoClick, onProductClick }) => {
 
                <div className="mt-8 pt-6 border-t border-[#EAE3D9]">
                  <div className="flex flex-col">
-                   <Link to="/contacto" className="flex items-center justify-between py-4 border-b border-[#EAE3D9] text-[#2B341F]" onClick={() => setIsMobileMenuOpen(false)}>
+                   <a 
+                     href="https://petit-muebles-gacela-srl-mueblesgacela-odoo-sh.odoo.com/shop" 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     className="flex items-center justify-between py-4 border-b border-[#EAE3D9] text-[#2B341F]" 
+                     onClick={() => setIsMobileMenuOpen(false)}
+                   >
                      <div className="flex items-center">
                        <Briefcase size={20} className="mr-4 text-[#8C7A6B]" strokeWidth={1.5} />
                        <span className="text-base font-clofie font-light">Compra mayorista</span>
                      </div>
                      <ChevronRight size={20} className="text-[#8C7A6B]" strokeWidth={1.5} />
-                   </Link>
+                   </a>
                    
                    <a href="tel:3584622342" className="flex items-center justify-between py-4 border-b border-[#EAE3D9] text-[#2B341F]">
                      <div className="flex items-center">
