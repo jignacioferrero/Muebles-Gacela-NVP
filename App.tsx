@@ -55,7 +55,13 @@ const App: React.FC = () => {
   };
 
   const handleBackToPdp = () => {
-    navigate(-1); // Go back to previous route
+    // Si hay historial previo (el usuario navegó desde dentro de la app), volvemos atrás.
+    // Si no hay historial (pestaña nueva abierta directamente con la URL), vamos al catálogo.
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/productos');
+    }
   };
 
   const handleStartAR = (product: Product | null) => {
