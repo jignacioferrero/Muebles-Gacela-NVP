@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Phone, MapPin, Briefcase, FileText, Upload, Send, MessageCircle, X, CheckCircle, ArrowRight } from 'lucide-react';
-import { sendEmail } from '../utils/email';
+import { sendEmail, uploadAttachment } from '../utils/email';
 
 const WorkWithUs: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -22,15 +22,26 @@ const WorkWithUs: React.FC = () => {
     const ubicacion = data.get('ubicacion') as string || 'No provista';
     const area      = data.get('area')      as string || 'Sin especificar';
     const presentacion = data.get('presentacion') as string || '';
-    const adjunto   = selectedCV ? `CV Adjunto: ${selectedCV.name} (${(selectedCV.size/1024).toFixed(1)} KB)` : 'Sin adjunto';
 
     try {
+      let attachmentUrl = '';
+      if (selectedCV) {
+        // Subir el archivo temporalmente para obtener una URL pública para el mail
+        attachmentUrl = await uploadAttachment(selectedCV);
+      }
+
+      const fileMessage = selectedCV 
+        ? `CV Adjunto: ${selectedCV.name} (${(selectedCV.size/1024).toFixed(1)} KB)\nURL de descarga: ${attachmentUrl}` 
+        : 'Sin adjunto';
+
       await sendEmail({
-        subject:    `Postulación Laboral - ${area}`,
-        from_name:  nombre,
-        from_email: email,
-        message:    `POSTULACIÓN LABORAL\n\nNombre: ${nombre}\nEmail: ${email}\nTeléfono: ${telefono}\nUbicación: ${ubicacion}\nÁrea: ${area}\n\nPresentación:\n${presentacion}\n\n${adjunto}`,
-      });
+        subject:        `Postulación Laboral - ${area}`,
+        from_name:      nombre,
+        from_email:     email,
+        attachment_url: attachmentUrl,
+        message:        `POSTULACIÓN LABORAL\n\nNombre: ${nombre}\nEmail: ${email}\nTeléfono: ${telefono}\nUbicación: ${ubicacion}\nÁrea: ${area}\n\nPresentación:\n${presentacion}\n\n${fileMessage}`,
+      }, true); // Usar la plantilla que soporta archivos adjuntos (claims)
+
       setFormStatus('success');
       setSelectedCV(null);
       form.reset();
@@ -40,6 +51,7 @@ const WorkWithUs: React.FC = () => {
       setTimeout(() => setFormStatus('idle'), 4000);
     }
   };
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

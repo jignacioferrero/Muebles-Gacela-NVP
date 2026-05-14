@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, MessageCircle, HelpCircle, AlertCircle, Briefcase, ChevronRight, FileText, ShieldCheck } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Phone, MapPin, MessageCircle, HelpCircle, AlertCircle, Briefcase, ChevronRight, FileText, ShieldCheck, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import { sendEmail } from '../utils/email';
 const Contacto: React.FC = () => {
   const quickLinks = [
     { name: 'Preguntas Frecuentes', path: '/preguntas-frecuentes', icon: HelpCircle, description: 'Respuestas a consultas generales y sobre la gestión de tus pedidos.' },
@@ -12,6 +12,40 @@ const Contacto: React.FC = () => {
     { name: 'Términos y Condiciones', path: '/terminos-y-condiciones', icon: FileText, description: 'Políticas generales de la web de Muebles Gacela.' },
     { name: 'Política de Privacidad', path: '/politica-de-privacidad', icon: FileText, description: 'Cómo protegemos tus datos y cuidamos tu privacidad.' },
   ];
+
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus('submitting');
+    const form = formRef.current;
+    if (!form) return;
+    
+    const data = new FormData(form);
+    const nombre   = data.get('nombre') as string || '';
+    const telefono = data.get('telefono') as string || 'No provisto';
+    const email    = data.get('email') as string || '';
+    const empresa  = data.get('empresa') as string || 'No provista';
+    const asunto   = data.get('asunto') as string || 'Consulta Web';
+    const consulta = data.get('consulta') as string || '';
+
+    try {
+      await sendEmail({
+        subject:    `Consulta Web de Contacto - ${asunto}`,
+        from_name:  nombre,
+        from_email: email,
+        message:    `CONSULTA DESDE PÁGINA DE CONTACTO\n\nNombre: ${nombre}\nEmail: ${email}\nTeléfono: +54 ${telefono}\nEmpresa: ${empresa}\n\nAsunto: ${asunto}\n\nMensaje:\n${consulta}`,
+      }, false); // false forces the contact template (default)
+
+      setFormStatus('success');
+      form.reset();
+    } catch (err) {
+      console.error('[Contacto] Error al enviar:', err);
+      setFormStatus('error');
+      setTimeout(() => setFormStatus('idle'), 4000);
+    }
+  };
 
   return (
     <motion.div 
@@ -200,57 +234,93 @@ const Contacto: React.FC = () => {
             <p className="mt-4 text-base text-[#8C7A6B] font-clofie font-light max-w-lg mx-auto">Dejanos tus datos y tu consulta. Nuestro equipo comercial se comunicará a la brevedad.</p>
           </div>
 
-          <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {/* Nombre */}
-              <div>
-                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="nombre">Nombre <span className="text-brand-support">*</span></label>
-                <input type="text" id="nombre" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Tu nombre y apellido" />
-              </div>
-              
-              {/* Teléfono */}
-              <div>
-                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="telefono">Número de Teléfono</label>
-                <div className="flex">
-                  <span className="inline-flex items-center justify-center px-4 bg-[#EAE3D9] border border-r-0 border-[#EAE3D9] rounded-l-xl text-[#594A42] font-clofie font-bold text-sm">
-                    +54
-                  </span>
-                  <input type="tel" id="telefono" className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-r-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Cod. área + número" />
+          <AnimatePresence mode="wait">
+            {formStatus === 'success' ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="py-12 text-center relative z-10"
+              >
+                <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="text-green-500" size={40} />
                 </div>
-              </div>
+                <h3 className="text-3xl font-godber font-normal text-brand-primary uppercase mb-4 tracking-[0.05em]">¡Mensaje Enviado!</h3>
+                <p className="text-lg text-[#8C7A6B] font-clofie font-light max-w-sm mx-auto">
+                  Hemos recibido tu consulta correctamente. Nuestro equipo comercial se pondrá en contacto con vos a la brevedad.
+                </p>
+                <button 
+                  onClick={() => setFormStatus('idle')}
+                  className="mt-8 font-clofie font-bold italic text-[14px] text-brand-support uppercase tracking-widest hover:underline"
+                >
+                  Enviar otro mensaje
+                </button>
+              </motion.div>
+            ) : (
+              <motion.form 
+                ref={formRef}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6 relative z-10" 
+                onSubmit={handleSubmit}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                  {/* Nombre */}
+                  <div>
+                    <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="nombre">Nombre <span className="text-brand-support">*</span></label>
+                    <input type="text" id="nombre" name="nombre" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Tu nombre y apellido" />
+                  </div>
+                  
+                  {/* Teléfono */}
+                  <div>
+                    <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="telefono">Número de Teléfono</label>
+                    <div className="flex">
+                      <span className="inline-flex items-center justify-center px-4 bg-[#EAE3D9] border border-r-0 border-[#EAE3D9] rounded-l-xl text-[#594A42] font-clofie font-bold text-sm">
+                        +54
+                      </span>
+                      <input type="tel" id="telefono" name="telefono" className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-r-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Cod. área + número" />
+                    </div>
+                  </div>
 
-              {/* Email */}
-              <div>
-                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="email">Email <span className="text-brand-support">*</span></label>
-                <input type="email" id="email" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="tu@email.com" />
-              </div>
+                  {/* Email */}
+                  <div>
+                    <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="email">Email <span className="text-brand-support">*</span></label>
+                    <input type="email" id="email" name="email" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="tu@email.com" />
+                  </div>
 
-              {/* Tu empresa */}
-              <div>
-                <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="empresa">Tu empresa</label>
-                <input type="text" id="empresa" className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Nombre de tu empresa (opcional)" />
-              </div>
-            </div>
+                  {/* Tu empresa */}
+                  <div>
+                    <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="empresa">Tu empresa</label>
+                    <input type="text" id="empresa" name="empresa" className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="Nombre de tu empresa (opcional)" />
+                  </div>
+                </div>
 
-            {/* Asunto */}
-            <div>
-              <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="asunto">Asunto <span className="text-brand-support">*</span></label>
-              <input type="text" id="asunto" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="¿Sobre qué nos escribís?" />
-            </div>
+                {/* Asunto */}
+                <div>
+                  <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="asunto">Asunto <span className="text-brand-support">*</span></label>
+                  <input type="text" id="asunto" name="asunto" required className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all" placeholder="¿Sobre qué nos escribís?" />
+                </div>
 
-            {/* Consulta */}
-            <div>
-              <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="consulta">Consulta <span className="text-brand-support">*</span></label>
-              <textarea id="consulta" required rows={5} className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all resize-none" placeholder="Escribí tu mensaje detallado acá..."></textarea>
-            </div>
+                {/* Consulta */}
+                <div>
+                  <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="consulta">Consulta <span className="text-brand-support">*</span></label>
+                  <textarea id="consulta" name="consulta" required rows={5} className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all resize-none" placeholder="Escribí tu mensaje detallado acá..."></textarea>
+                </div>
 
-            <div className="pt-6 text-center">
-              <button type="submit" className="inline-flex items-center justify-center px-12 py-4 bg-brand-primary text-[#ECE2D2] rounded-xl text-[14px] uppercase tracking-[0.2em] hover:bg-brand-support transition-all font-clofie font-bold italic shadow-md hover:shadow-xl hover:-translate-y-1 w-full md:w-auto">
-                Enviar Mensaje
-              </button>
-            </div>
-          </form>
+                <div className="pt-6 text-center">
+                  <button 
+                    type="submit" 
+                    disabled={formStatus === 'submitting'}
+                    className="inline-flex items-center justify-center px-12 py-4 bg-brand-primary text-[#ECE2D2] rounded-xl text-[14px] uppercase tracking-[0.2em] hover:bg-brand-support transition-all font-clofie font-bold italic shadow-md hover:shadow-xl hover:-translate-y-1 w-full md:w-auto disabled:opacity-70"
+                  >
+                    {formStatus === 'submitting' ? 'Enviando...' : formStatus === 'error' ? 'Error al enviar. Reintentar' : 'Enviar Mensaje'}
+                  </button>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
         </div>
+
 
       </div>
     </motion.div>

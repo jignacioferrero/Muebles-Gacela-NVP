@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, User, MessageSquare, Upload, CheckCircle, AlertCircle, MessageCircle, ArrowRight, FileText, X } from 'lucide-react';
-import { sendEmail } from '../utils/email';
+import { sendEmail, uploadAttachment } from '../utils/email';
 
 const ClaimsForm: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -15,19 +15,32 @@ const ClaimsForm: React.FC = () => {
     setFormStatus('submitting');
     const form = formRef.current;
     if (!form) return;
+
     const data = new FormData(form);
     const nombre    = data.get('nombre')    as string || '';
     const email     = data.get('email')     as string || '';
     const asunto    = data.get('asunto')    as string || 'Sin especificar';
     const descripcion = data.get('descripcion') as string || '';
-    const adjunto   = selectedFile ? `Archivo adjunto: ${selectedFile.name} (${(selectedFile.size/1024).toFixed(1)} KB)` : 'Sin adjunto';
+
     try {
+      let attachmentUrl = '';
+      if (selectedFile) {
+        // Subir el archivo temporalmente para obtener una URL pública
+        attachmentUrl = await uploadAttachment(selectedFile);
+      }
+
+      const fileMessage = selectedFile 
+        ? `Archivo adjunto: ${selectedFile.name} (${(selectedFile.size/1024).toFixed(1)} KB)\nURL de descarga: ${attachmentUrl}` 
+        : 'Sin adjunto';
+
       await sendEmail({
-        subject:    `Reclamo Post-Venta - ${asunto}`,
-        from_name:  nombre,
-        from_email: email,
-        message:    `RECLAMO POST-VENTA\n\nNombre: ${nombre}\nEmail: ${email}\nMotivo: ${asunto}\n\nDescripción:\n${descripcion}\n\n${adjunto}`,
-      });
+        subject:        `Reclamo Post-Venta - ${asunto}`,
+        from_name:      nombre,
+        from_email:     email,
+        attachment_url: attachmentUrl,
+        message:        `RECLAMO POST-VENTA\n\nNombre: ${nombre}\nEmail: ${email}\nMotivo: ${asunto}\n\nDescripción:\n${descripcion}\n\n${fileMessage}`,
+      }, true); // true triggers the claims template
+
       setFormStatus('success');
       setSelectedFile(null);
       form.reset();
@@ -37,6 +50,7 @@ const ClaimsForm: React.FC = () => {
       setTimeout(() => setFormStatus('idle'), 4000);
     }
   };
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
