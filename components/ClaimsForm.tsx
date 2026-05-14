@@ -6,6 +6,7 @@ import { sendEmail, uploadAttachment } from '../utils/email';
 
 const ClaimsForm: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -13,6 +14,7 @@ const ClaimsForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
+    setErrorMessage(null);
     const form = formRef.current;
     if (!form) return;
 
@@ -44,12 +46,13 @@ const ClaimsForm: React.FC = () => {
       setFormStatus('success');
       setSelectedFile(null);
       form.reset();
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ClaimsForm] Error al enviar:', err);
       setFormStatus('error');
-      setTimeout(() => setFormStatus('idle'), 4000);
+      setErrorMessage(err?.text || err?.message || 'No se pudo establecer conexión con el servidor de correos. Por favor, reintentá o contactanos directamente.');
     }
   };
+
 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -240,6 +243,25 @@ const ClaimsForm: React.FC = () => {
                         </motion.div>
                       )}
                     </div>
+
+                    <AnimatePresence>
+                      {formStatus === 'error' && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="bg-red-50 border border-red-200 rounded-2xl p-6 flex items-start gap-4 text-red-800 font-clofie"
+                        >
+                          <AlertCircle size={24} className="text-red-500 shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-bold text-base mb-1">Hubo un problema al enviar</h4>
+                            <p className="text-sm text-red-700/90 leading-relaxed">
+                              {errorMessage}
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
                     <button 
                       type="submit"

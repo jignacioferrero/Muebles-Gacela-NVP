@@ -6,6 +6,7 @@ import { sendEmail, uploadAttachment } from '../utils/email';
 
 const WorkWithUs: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [selectedCV, setSelectedCV] = useState<File | null>(null);
   const cvInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -13,6 +14,7 @@ const WorkWithUs: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
+    setErrorMessage(null);
     const form = formRef.current;
     if (!form) return;
     const data = new FormData(form);
@@ -45,12 +47,13 @@ const WorkWithUs: React.FC = () => {
       setFormStatus('success');
       setSelectedCV(null);
       form.reset();
-    } catch (err) {
+    } catch (err: any) {
       console.error('[WorkWithUs] Error al enviar postulación:', err);
       setFormStatus('error');
-      setTimeout(() => setFormStatus('idle'), 4000);
+      setErrorMessage(err?.text || err?.message || 'Hubo un fallo en el servicio de correos. Por favor revisá que el archivo sea menor a 10MB o reintentá.');
     }
   };
+
 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -302,6 +305,25 @@ const WorkWithUs: React.FC = () => {
                         )}
                       </div>
                     </div>
+
+                    <AnimatePresence>
+                      {formStatus === 'error' && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="bg-red-50 border border-red-200 rounded-2xl p-6 flex items-start gap-4 text-red-800 font-clofie text-left"
+                        >
+                          <AlertCircle size={24} className="text-red-500 shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-bold text-base mb-1">Error en la postulación</h4>
+                            <p className="text-sm text-red-700/90 leading-relaxed">
+                              {errorMessage}
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
                     <button 
                       type="submit"

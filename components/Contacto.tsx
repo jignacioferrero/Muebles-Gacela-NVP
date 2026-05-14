@@ -14,11 +14,13 @@ const Contacto: React.FC = () => {
   ];
 
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
+    setErrorMessage(null);
     const form = formRef.current;
     if (!form) return;
     
@@ -40,12 +42,13 @@ const Contacto: React.FC = () => {
 
       setFormStatus('success');
       form.reset();
-    } catch (err) {
+    } catch (err: any) {
       console.error('[Contacto] Error al enviar:', err);
       setFormStatus('error');
-      setTimeout(() => setFormStatus('idle'), 4000);
+      setErrorMessage(err?.text || err?.message || 'Hubo una falla de red o configuración en el envío de correos. Reintentá en unos momentos.');
     }
   };
+
 
   return (
     <motion.div 
@@ -306,6 +309,25 @@ const Contacto: React.FC = () => {
                   <label className="block text-[12px] font-clofie font-bold uppercase tracking-widest text-[#594A42] mb-2" htmlFor="consulta">Consulta <span className="text-brand-support">*</span></label>
                   <textarea id="consulta" name="consulta" required rows={5} className="w-full bg-[#FAF8F5] border border-[#EAE3D9] rounded-xl px-4 py-3.5 text-[#594A42] font-clofie focus:outline-none focus:border-brand-support focus:ring-1 focus:ring-brand-support transition-all resize-none" placeholder="Escribí tu mensaje detallado acá..."></textarea>
                 </div>
+
+                <AnimatePresence>
+                  {formStatus === 'error' && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="bg-red-50 border border-red-100 rounded-xl p-5 flex items-start gap-3 text-red-800 font-clofie text-left"
+                    >
+                      <AlertCircle size={20} className="text-red-500 shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="font-bold text-sm mb-1">Ocurrió un error al enviar</h4>
+                        <p className="text-[13px] text-red-700/90 leading-relaxed">
+                          {errorMessage}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <div className="pt-6 text-center">
                   <button 
