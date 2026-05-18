@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Phone, MapPin, Briefcase, FileText, Upload, Send, MessageCircle, X, CheckCircle, ArrowRight } from 'lucide-react';
-import { sendEmail, uploadAttachment } from '../utils/email';
+import { sendRRHHEmail, uploadAttachment } from '../utils/email';
 
 const WorkWithUs: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -36,13 +36,15 @@ const WorkWithUs: React.FC = () => {
         ? `CV Adjunto: ${selectedCV.name} (${(selectedCV.size/1024).toFixed(1)} KB)\nURL de descarga: ${attachmentUrl}` 
         : 'Sin adjunto';
 
-      await sendEmail({
-        subject:        `Postulación Laboral - ${area}`,
+      await sendRRHHEmail({
         from_name:      nombre,
         from_email:     email,
+        phone:          telefono,
+        city:           ubicacion,
+        interest_area:  area,
+        message:        presentacion,
         attachment_url: attachmentUrl,
-        message:        `POSTULACIÓN LABORAL\n\nNombre: ${nombre}\nEmail: ${email}\nTeléfono: ${telefono}\nUbicación: ${ubicacion}\nÁrea: ${area}\n\nPresentación:\n${presentacion}\n\n${fileMessage}`,
-      }, true); // Usar la plantilla que soporta archivos adjuntos (claims)
+      });
 
       setFormStatus('success');
       setSelectedCV(null);

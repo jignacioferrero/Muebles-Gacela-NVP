@@ -6,6 +6,11 @@ const SERVICE_ID       = import.meta.env.VITE_EMAILJS_SERVICE_ID       || '';
 const TEMPLATE_CONTACT = import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT || '';
 const TEMPLATE_CLAIMS  = import.meta.env.VITE_EMAILJS_TEMPLATE_CLAIMS  || '';
 
+// ─── EmailJS RRHH (Sumate) Configuration ─────────────────────────────────────
+const RRHH_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_RRHH_PUBLIC_KEY  || '';
+const RRHH_SERVICE_ID  = import.meta.env.VITE_EMAILJS_RRHH_SERVICE_ID  || '';
+const RRHH_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_RRHH_TEMPLATE_ID || '';
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 export interface EmailPayload {
   subject:         string;
@@ -14,6 +19,16 @@ export interface EmailPayload {
   message:         string;
   attachment_url?: string;
   extra?:          Record<string, string>;
+}
+
+export interface RRHHEmailPayload {
+  from_name:       string;
+  from_email:      string;
+  phone:           string;
+  city:            string;
+  interest_area:   string;
+  message:         string;
+  attachment_url:  string;
 }
 
 // ─── Send Email ───────────────────────────────────────────────────────────────
@@ -41,6 +56,17 @@ export async function sendEmail(payload: EmailPayload, useClaimsTemplate: boolea
   };
 
   await emailjs.send(SERVICE_ID, templateId, templateParams, PUBLIC_KEY);
+}
+
+// ─── Send RRHH Email ─────────────────────────────────────────────────────────
+export async function sendRRHHEmail(payload: RRHHEmailPayload): Promise<void> {
+  if (!RRHH_PUBLIC_KEY || !RRHH_SERVICE_ID || !RRHH_TEMPLATE_ID) {
+    console.warn('[EmailJS - RRHH] No están configuradas las variables de entorno de RRHH. Simulando envío:', payload);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return;
+  }
+
+  await emailjs.send(RRHH_SERVICE_ID, RRHH_TEMPLATE_ID, payload as any, RRHH_PUBLIC_KEY);
 }
 
 // ─── File Upload Helper (Optional / Fallback) ──────────────────────────────────
