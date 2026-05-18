@@ -75,21 +75,25 @@ export async function uploadAttachment(file: File): Promise<string> {
     const formData = new FormData();
     formData.append('file', file);
     
-    // Subir a un host temporal público para poder enviarlo en el cuerpo del mail
-    const response = await fetch('https://file.io/?expires=2w', { // Expira en 2 semanas
+    // Subir a tmpfiles.org que tiene CORS abierto y es sumamente confiable
+    const response = await fetch('https://tmpfiles.org/api/v1/upload', {
       method: 'POST',
       body: formData
     });
 
     if (!response.ok) {
-      throw new Error(`Upload failed: ${response.statusText}`);
+      throw new Error(`Fallo la subida al servidor temporal (status: ${response.status})`);
     }
 
     const data = await response.json();
-    return data.link;
-  } catch (err) {
-    console.error('[FileUpload] Fallo la subida a file.io:', err);
-    return 'Error al subir el archivo adjunto.';
+    if (data.status === 'success' && data.data?.url) {
+      // Convertir el link de vista en link de descarga directa para el email
+      return data.data.url.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/');
+    }
+    throw new Error(data.message || 'Error desconocido al subir a tmpfiles.org');
+  } catch (err: any) {
+    console.error('[FileUpload] Fallo la subida a tmpfiles.org:', err);
+    throw new Error(`No se pudo subir el archivo CV: ${err.message}`);
   }
 }
 

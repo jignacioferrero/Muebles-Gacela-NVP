@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Mail, Phone, MapPin, Briefcase, FileText, Upload, Send, MessageCircle, X, CheckCircle, ArrowRight } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Briefcase, FileText, Upload, Send, MessageCircle, X, CheckCircle, ArrowRight, AlertCircle } from 'lucide-react';
 import { sendRRHHEmail, uploadAttachment } from '../utils/email';
 
 const WorkWithUs: React.FC = () => {
