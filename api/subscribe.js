@@ -1,6 +1,6 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // Configurar CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,8 +32,12 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Error de configuración del servidor.' });
   }
 
+  // Eliminar espacios en blanco accidentales (por ejemplo, trailing spaces de cmd echo)
+  const trimmedApiKey = apiKey.trim();
+  const trimmedListId = listId.trim();
+
   // Extraer datacenter del API Key (ejemplo: 'KEY-us18' -> 'us18')
-  const dc = apiKey.split('-')[1];
+  const dc = trimmedApiKey.split('-')[1];
   if (!dc) {
     console.error('API Key de Mailchimp en formato incorrecto (falta datacenter).');
     return res.status(500).json({ error: 'Error en el formato de API Key.' });
@@ -41,14 +45,14 @@ module.exports = async function handler(req, res) {
 
   try {
     const subscriberHash = crypto.createHash('md5').update(email.toLowerCase().trim()).digest('hex');
-    const url = `https://${dc}.api.mailchimp.com/3.0/lists/${listId}/members/${subscriberHash}`;
+    const url = `https://${dc}.api.mailchimp.com/3.0/lists/${trimmedListId}/members/${subscriberHash}`;
 
     // Usar PUT para suscribir o actualizar si ya existe
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${Buffer.from(`anykey:${apiKey}`).toString('base64')}`,
+        Authorization: `Basic ${Buffer.from(`anykey:${trimmedApiKey}`).toString('base64')}`,
       },
       body: JSON.stringify({
         email_address: email.trim(),
@@ -74,4 +78,4 @@ module.exports = async function handler(req, res) {
     console.error('Excepción en suscripción de Mailchimp:', error);
     return res.status(500).json({ error: 'Fallo interno al procesar suscripción.' });
   }
-};
+}
