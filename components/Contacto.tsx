@@ -145,7 +145,7 @@ const Contacto: React.FC = () => {
                   <AlertCircle size={20} className="text-brand-support" /> Soporte Post-Venta
                 </h4>
                 <p className="text-[#594A42] font-clofie font-light text-base leading-relaxed">
-                  ¿Tuviste algún inconveniente o falta un herraje? Completá el Formulario de Reclamos y nos encargamos de inmediato.
+                  ¿Tuviste algún inconveniente? Completá el Formulario de Reclamos y nos encargamos de inmediato.
                 </p>
                 <Link to="/formulario-de-reclamos" className="inline-block text-[12px] font-clofie font-bold italic uppercase tracking-widest text-brand-support hover:underline">
                   Abrir Reclamo
