@@ -1,7 +1,6 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import crypto from 'crypto';
+const crypto = require('crypto');
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async function handler(req, res) {
   // Configurar CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -71,8 +70,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     return res.status(200).json({ success: true, member: data.email_address });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Excepción en suscripción de Mailchimp:', error);
     return res.status(500).json({ error: 'Fallo interno al procesar suscripción.' });
   }
-}
+};
