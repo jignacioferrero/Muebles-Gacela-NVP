@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
-import { sendEmail } from '../utils/email';
 
 const Newsletter: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '' });
@@ -12,12 +11,21 @@ const Newsletter: React.FC = () => {
     e.preventDefault();
     setStatus('sending');
     try {
-      await sendEmail({
-        subject:    'Newsletter - Nueva suscripción',
-        from_name:  formData.name,
-        from_email: formData.email,
-        message:    `${formData.name} (${formData.email}) se suscribió al newsletter de Muebles Gacela.`,
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error('Fallo al suscribirse');
+      }
+
       setStatus('success');
       setFormData({ name: '', email: '' });
       setTimeout(() => setStatus('idle'), 4000);
